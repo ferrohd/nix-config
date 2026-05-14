@@ -7,7 +7,8 @@
     settings = {
       font-family = "JetBrainsMono Nerd Font";
       font-size = 14;
-      theme = "catppuccin-mocha";
+      #theme = "catppuccin-mocha";
+      theme = "stylix";
       background-opacity = 0.85;
       background-blur-radius = 20;
       cursor-style = "bar";

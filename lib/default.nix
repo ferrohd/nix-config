@@ -69,6 +69,7 @@ in
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            backupFileExtension = "hm-backup";
             extraSpecialArgs = specialArgs;
             users = lib.genAttrs users (user: import ../users/${user});
           };
