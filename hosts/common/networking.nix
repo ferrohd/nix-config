@@ -4,9 +4,6 @@
   networking = {
     networkmanager.enable = true;
 
-    # Modern DNS resolution
-    nameservers = [ "1.1.1.1" "9.9.9.9" ];
-
     firewall = {
       enable = true;
       allowPing = true;
@@ -23,7 +20,7 @@
 
   # Resolved for mDNS / DNS-over-TLS
   services.resolved = {
-    enable = false;
+    enable = true;
     settings.Resolve = {
       DNSSEC = "allow-downgrade";
       FallbackDNS = "1.1.1.1 9.9.9.9";
