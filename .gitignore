@@ -3,3 +3,5 @@ result-*
 .direnv/
 .envrc.local
 *.qcow2
+*.log
+profiles.ini
