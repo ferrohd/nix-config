@@ -1,0 +1,10 @@
+# statix.toml — linter configuration
+# https://github.com/nerdypepper/statix
+
+ignore = [".direnv"]
+
+# W20 fires on repeated top-level attribute names (e.g. multiple `services.foo`
+# assignments in the same file). This is idiomatic in NixOS modules — the
+# module system merges them at evaluation time — so the warning is a false
+# positive for this codebase.
+disabled = ["repeated_keys"]

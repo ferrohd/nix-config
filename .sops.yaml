@@ -1,0 +1,32 @@
+# .sops.yaml — edit secrets with: sops secrets/<file>.yaml
+#
+# Setup:
+#   mkdir -p ~/.config/sops/age
+#   ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt
+#   age-keygen -y ~/.config/sops/age/keys.txt  # → put public key below
+#
+keys:
+  - &ferro_blackmesa age1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  - &ferro_laptop    age1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  - &server          age1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+creation_rules:
+  # Secrets accessible to all hosts
+  - path_regex: secrets/common\.yaml$
+    key_groups:
+      - age:
+          - *ferro_blackmesa
+          - *ferro_laptop
+          - *server
+
+  # Desktop-only secrets
+  - path_regex: secrets/blackmesa\.yaml$
+    key_groups:
+      - age:
+          - *ferro_blackmesa
+
+  # Server-only secrets
+  - path_regex: secrets/server\.yaml$
+    key_groups:
+      - age:
+          - *server
