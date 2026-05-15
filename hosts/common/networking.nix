@@ -21,10 +21,8 @@
   # Resolved for mDNS / DNS-over-TLS
   services.resolved = {
     enable = true;
-    settings.Resolve = {
-      DNSSEC = "allow-downgrade";
-      FallbackDNS = "1.1.1.1 9.9.9.9";
-    };
+    dnssec = "allow-downgrade";
+    fallbackDns = [ "1.1.1.1" "9.9.9.9" ];
   };
 
   # Tailscale VPN (optional — enable per-host if needed)
