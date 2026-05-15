@@ -72,17 +72,7 @@
     };
   };
 
-  # ── Per-host monitor layout ─────────────────────────────────────────────
-  wayland.windowManager.hyprland.settings.monitor = lib.mkIf isDesktop (
-    if hostname == "blackmesa" then [
-      "DP-2, 3840x2160@60, 0x0, 1, transform, 1, bitdepth, 10"
-      "DP-1, 3840x2160@60, 2160x0, 1, bitdepth, 10"
-    ] else if hostname == "laptop" then [
-      "eDP-1, preferred, auto, 1.5"
-    ] else [
-      ", preferred, auto, 1"
-    ]
-  );
+
 
   # ── Packages ────────────────────────────────────────────────────────────
   home.packages = with pkgs; [

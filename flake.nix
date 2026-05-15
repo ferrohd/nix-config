@@ -104,6 +104,7 @@
             extraModules = [
               inputs.nixos-hardware.nixosModules.common-cpu-amd
               inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+              ./hosts/blackmesa/home.nix
             ];
           };
 
@@ -112,7 +113,9 @@
             system = "x86_64-linux";
             users = [ "ferro" ];
             desktop = true;
-            extraModules = [ ];
+            extraModules = [
+              ./hosts/laptop/home.nix
+            ];
           };
 
           server = mkHost {
