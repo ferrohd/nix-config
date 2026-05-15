@@ -1,5 +1,5 @@
 # hosts/blackmesa — AMD/Nvidia workstation, dual 4K, gaming
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [
@@ -15,7 +15,7 @@
     modesetting.enable = true;
     powerManagement.enable = false;
     nvidiaSettings = true;
-    package = pkgs.linuxPackages_latest.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
   services.xserver.videoDrivers = [ "nvidia" ];
 
