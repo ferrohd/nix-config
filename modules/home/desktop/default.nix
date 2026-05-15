@@ -22,7 +22,7 @@
     enable = true;
     package = pkgs.unstable.hyprland;
 
-    settings = lib.mkForce {
+    settings = {
       "$mainMod" = "SUPER";
 
       env = [
@@ -33,9 +33,6 @@
       ];
 
       cursor.no_hardware_cursors = false;
-
-      # Per-host monitor config — override in users/<name>/default.nix
-      monitor = lib.mkDefault [ ", preferred, auto, 1" ];
 
       exec-once = [
         "waybar"
@@ -51,8 +48,8 @@
         gaps_in = 6;
         gaps_out = 12;
         border_size = 2;
-        "col.active_border" = "rgba(cba6f7ff) rgba(89b4faff) 45deg";
-        "col.inactive_border" = "rgba(585b70ff)";
+        "col.active_border" = lib.mkForce "rgba(cba6f7ff) rgba(89b4faff) 45deg";
+        "col.inactive_border" = lib.mkForce "rgba(585b70ff)";
         layout = "dwindle";
       };
 
@@ -75,7 +72,7 @@
           enabled = true;
           range = 20;
           render_power = 3;
-          color = "rgba(00000055)";
+          color = lib.mkForce "rgba(00000055)";
         };
       };
 
