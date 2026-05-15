@@ -21,7 +21,7 @@
   # Resolved for mDNS / DNS-over-TLS
   services.resolved = {
     enable = true;
-    dnssec = "allow-downgrade";
+    dnssec = "false";
     fallbackDns = [ "1.1.1.1" "9.9.9.9" ];
   };
 

@@ -18,7 +18,7 @@
       window-padding-y = 8;
       window-decoration = "server"; # let Hyprland draw the border
       scrollback-limit = 10000;
-      audio-bell = false;
+      bell-features = "no-audio";
       confirm-close-surface = false;
       shell-integration = "zsh";
     };
