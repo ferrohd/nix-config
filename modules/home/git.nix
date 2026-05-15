@@ -37,7 +37,6 @@ _:
       gpg.format = "ssh"; # Sign commits with SSH key
       core = {
         autocrlf = "input";
-        pager = "delta";
       };
       url."ssh://git@github.com/".insteadOf = "https://github.com/";
     };
