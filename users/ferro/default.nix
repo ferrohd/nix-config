@@ -147,7 +147,6 @@
     userDirs = {
       enable = true;
       createDirectories = true;
-      setSessionVariables = false;
     };
     mimeApps = lib.mkIf isDesktop {
       enable = true;
