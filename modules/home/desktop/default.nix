@@ -21,9 +21,6 @@
   wayland.windowManager.hyprland = {
     enable = true;
     package = pkgs.unstable.hyprland;
-    # configType defaults to "lua" in HM 26.05+, but Lua config requires Hyprland ≥ 0.55.
-    # nixpkgs-unstable currently ships 0.52.x — migrate this once the package is updated.
-    configType = "hyprlang";
 
     settings = lib.mkForce {
       "$mainMod" = "SUPER";
