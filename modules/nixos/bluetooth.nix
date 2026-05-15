@@ -7,7 +7,7 @@ _:
     powerOnBoot = true;
     settings.General = {
       Enable = "Source,Sink,Media,Socket";
-      Experimental = true;  # Battery level reporting
+      Experimental = true; # Battery level reporting
       FastConnectable = true;
     };
   };

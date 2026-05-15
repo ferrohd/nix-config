@@ -43,7 +43,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    age    # Modern encryption
-    rage   # Rust implementation of age
+    age # Modern encryption
+    rage # Rust implementation of age
   ];
 }

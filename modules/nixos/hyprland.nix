@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   # ── Hyprland (opt-in via myconfig.hyprland.enable) ──────────────────────
@@ -12,6 +12,8 @@
     programs.hyprland = {
       enable = true;
       xwayland.enable = true;
+      package = pkgs.unstable.hyprland;
+      portalPackage = pkgs.unstable.xdg-desktop-portal-hyprland;
     };
 
     # XDG Desktop Portal (screen sharing, file pickers, etc.)

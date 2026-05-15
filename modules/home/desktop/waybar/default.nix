@@ -1,10 +1,11 @@
-_:
+{ pkgs, ... }:
 
 {
   stylix.targets.waybar.addCss = false;
 
   programs.waybar = {
     enable = true;
+    package = pkgs.unstable.waybar;
     style = builtins.readFile ./style.css;
 
     settings = {

@@ -4,6 +4,7 @@
   # ── Ghostty (primary terminal) ──────────────────────────────────────────
   programs.ghostty = {
     enable = true;
+    package = pkgs.unstable.ghostty;
     settings = {
       font-family = "JetBrainsMono Nerd Font";
       font-size = 14;
@@ -15,7 +16,7 @@
       cursor-style-blink = true;
       window-padding-x = 8;
       window-padding-y = 8;
-      window-decoration = "server";  # let Hyprland draw the border
+      window-decoration = "server"; # let Hyprland draw the border
       scrollback-limit = 10000;
       audio-bell = false;
       confirm-close-surface = false;

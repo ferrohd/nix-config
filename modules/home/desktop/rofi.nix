@@ -3,9 +3,9 @@
 {
   programs.rofi = {
     enable = true;
-    # FIX: rofi-wailand has been merged into rofi package
-    package = pkgs.rofi;
-    plugins = [ pkgs.rofi-calc ];
+    # rofi-wayland has been merged into rofi on unstable — pin from there
+    package = pkgs.unstable.rofi;
+    plugins = [ pkgs.unstable.rofi-calc ];
     font = lib.mkForce "JetBrainsMono Nerd Font 13";
     terminal = "ghostty";
     extraConfig = {

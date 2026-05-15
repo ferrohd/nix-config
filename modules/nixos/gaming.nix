@@ -4,7 +4,7 @@ _:
   # ── Gaming ──────────────────────────────────────────────────────────────
   programs.steam = {
     enable = true;
-    gamescopeSession.enable = true;  # Gamescope compositor for Steam
+    gamescopeSession.enable = true; # Gamescope compositor for Steam
     remotePlay.openFirewall = true;
   };
 

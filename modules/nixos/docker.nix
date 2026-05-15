@@ -24,7 +24,7 @@
 
   environment.systemPackages = with pkgs; [
     docker-compose
-    lazydocker   # TUI for Docker
-    dive         # Inspect Docker image layers
+    lazydocker # TUI for Docker
+    dive # Inspect Docker image layers
   ];
 }

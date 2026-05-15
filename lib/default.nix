@@ -15,14 +15,15 @@ in
   #   secureBoot   : bool       — enables lanzaboote Secure Boot
   #   extraModules : [ module ] — hardware-specific or one-off modules
   #
-  mkHost = {
-    hostname,
-    system ? "x86_64-linux",
-    users ? [ ],
-    desktop ? true,
-    secureBoot ? false,
-    extraModules ? [ ],
-  }:
+  mkHost =
+    { hostname
+    , system ? "x86_64-linux"
+    , users ? [ ]
+    , desktop ? true
+    , secureBoot ? false
+    , extraModules ? [ ]
+    ,
+    }:
     let
       # Shared specialArgs available in every NixOS + HM module
       specialArgs = {

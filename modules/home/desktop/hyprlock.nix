@@ -1,8 +1,9 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 
 {
   programs.hyprlock = {
     enable = true;
+    package = pkgs.unstable.hyprlock;
 
     settings = lib.mkForce {
       general = {

@@ -134,7 +134,7 @@
     ouch
   ] ++ lib.optionals isDesktop [
     # ── Desktop apps ──────────────────────────────────────────────────
-    ghostty
+    # ghostty is provided by programs.ghostty (pinned to unstable in terminal.nix)
     kitty
     discord
     pavucontrol

@@ -8,6 +8,7 @@
     # Pin the registry so `nix run nixpkgs#foo` uses this exact nixpkgs
     registry = {
       nixpkgs.flake = inputs.nixpkgs;
+      nixpkgs-unstable.flake = inputs.nixpkgs-unstable;
     };
 
     # Keep flake inputs in the store for offline eval
@@ -19,8 +20,6 @@
       experimental-features = [
         "nix-command"
         "flakes"
-        "auto-allocate-uids"
-        "cgroups"
       ];
 
       # Build optimisation

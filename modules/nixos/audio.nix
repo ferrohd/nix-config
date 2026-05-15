@@ -13,8 +13,8 @@
   security.rtkit.enable = true;
 
   environment.systemPackages = with pkgs; [
-    pavucontrol   # GUI volume mixer
-    pwvucontrol   # PipeWire-native mixer
-    qpwgraph      # PipeWire patchbay (replaces helvum)
+    pavucontrol # GUI volume mixer
+    pwvucontrol # PipeWire-native mixer
+    qpwgraph # PipeWire patchbay (replaces helvum)
   ];
 }

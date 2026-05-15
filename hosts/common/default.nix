@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
@@ -13,7 +13,7 @@
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.unstable.linuxPackages_latest;
   };
 
   # ── Shell ───────────────────────────────────────────────────────────────
@@ -23,6 +23,9 @@
   # ── Wayland env ─────────────────────────────────────────────────────────
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
-  # ── Unfree ──────────────────────────────────────────────────────────────
-  nixpkgs.config.allowUnfree = true;
+  # ── Nixpkgs ─────────────────────────────────────────────────────────────
+  nixpkgs = {
+    config.allowUnfree = true;
+    overlays = import ../../overlays { inherit (inputs) opencode nixpkgs-unstable; };
+  };
 }

@@ -1,15 +1,18 @@
 { pkgs, ... }:
 
 {
-  home.packages = with pkgs; [
-    grimblast
-    slurp
-    cliphist
-    hyprpaper
-    wl-clipboard
-    swappy
-    hyprpicker
-    wf-recorder
+  home.packages = [
+    # ── Hyprland utilities (from unstable to match compositor version) ──
+    pkgs.unstable.grimblast
+    pkgs.unstable.hyprpaper
+    pkgs.unstable.hyprpicker
+
+    # ── Wayland tools (stable is fine) ─────────────────────────────────
+    pkgs.slurp
+    pkgs.cliphist
+    pkgs.wl-clipboard
+    pkgs.swappy
+    pkgs.wf-recorder
   ];
 
   services.swayosd.enable = true;

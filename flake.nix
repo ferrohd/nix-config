@@ -5,7 +5,8 @@
 
   inputs = {
     # ── Core ────────────────────────────────────────────────────────────
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # ── Flake infrastructure ────────────────────────────────────────────
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -13,7 +14,7 @@
 
     # ── Home Manager ────────────────────────────────────────────────────
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -22,7 +23,7 @@
 
     # ── Theming ─────────────────────────────────────────────────────────
     stylix = {
-      url = "github:danth/stylix";
+      url = "github:danth/stylix/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -67,14 +68,14 @@
         devShells.default = pkgs.mkShell {
           name = "nixos-config";
           packages = with pkgs; [
-            nil            # Nix LSP
-            nixpkgs-fmt    # Formatter
-            statix         # Nix linter
-            deadnix        # Dead code finder
-            sops           # Secrets editor
-            age            # Encryption
-            ssh-to-age     # Convert SSH keys → age
-            just           # Command runner
+            nil # Nix LSP
+            nixpkgs-fmt # Formatter
+            statix # Nix linter
+            deadnix # Dead code finder
+            sops # Secrets editor
+            age # Encryption
+            ssh-to-age # Convert SSH keys → age
+            just # Command runner
           ];
         };
 
@@ -124,7 +125,7 @@
         };
 
         # ── Overlays ────────────────────────────────────────────────────
-        overlays.default = import ./overlays { inherit (inputs) opencode; };
+        overlays.default = import ./overlays { inherit (inputs) opencode nixpkgs-unstable; };
       };
     };
 }
