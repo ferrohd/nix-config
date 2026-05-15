@@ -95,6 +95,9 @@
     };
   };
 
+  # ── Thunderbolt ─────────────────────────────────────────────────────────
+  services.hardware.bolt.enable = true;
+
   # ── Host-specific packages ─────────────────────────────────────────────
   environment.systemPackages = with pkgs; [
     nvtopPackages.nvidia

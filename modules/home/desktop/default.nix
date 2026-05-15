@@ -120,29 +120,6 @@
         vfr = true;
       };
 
-      windowrule = [
-        "opacity 1.0 override 0.9 override 0.9 override, class:^(kitty)$"
-        "opacity 1.0 override 0.9 override 0.9 override, class:^(ghostty)$"
-        "float, class:^(pavucontrol)$"
-        "float, class:^(blueman-manager)$"
-        "float, title:^(Picture-in-Picture)$"
-        "pin, title:^(Picture-in-Picture)$"
-        "float, title:^(Volume Control)$"
-        "center, class:^(pavucontrol)$"
-        "noblur, class:^(rofi)$"
-        "noblur, class:^(waybar)$"
-        "immediate, fullscreen:1"
-      ];
-
-      blurls = [ "waybar" "dunst" ];
-
-      layerrule = [
-        "blur, waybar"
-        "blur, dunst"
-        "ignorezero, waybar"
-        "ignorezero, dunst"
-      ];
-
       bind = [
         "$mainMod, Return, exec, ghostty"
         "$mainMod, Q, killactive,"
@@ -205,6 +182,26 @@
         "$mainMod, mouse:273, resizewindow"
       ];
     };
+
+    # Hyprland v0.54 requires match: prefix for windowrule and layerrule matchers
+    extraConfig = ''
+      layerrule = blur on, match:namespace waybar
+      layerrule = blur on, match:namespace dunst
+      layerrule = ignore_alpha 0, match:namespace waybar
+      layerrule = ignore_alpha 0, match:namespace dunst
+
+      windowrule = match:class ^(kitty)$, opacity 1.0 override 0.9 override 0.9 override
+      windowrule = match:class ^(ghostty)$, opacity 1.0 override 0.9 override 0.9 override
+      windowrule = match:class ^(pavucontrol)$, float on
+      windowrule = match:class ^(blueman-manager)$, float on
+      windowrule = match:title ^(Picture-in-Picture)$, float on
+      windowrule = match:title ^(Picture-in-Picture)$, pin on
+      windowrule = match:title ^(Volume Control)$, float on
+      windowrule = match:class ^(pavucontrol)$, center on
+      windowrule = match:class ^(rofi)$, no_blur on
+      windowrule = match:class ^(waybar)$, no_blur on
+      windowrule = match:fullscreen 1, immediate on
+    '';
   };
 
   # ── GTK ─────────────────────────────────────────────────────────────────
