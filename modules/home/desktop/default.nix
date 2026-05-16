@@ -39,6 +39,7 @@
         "dunst"
         "hyprpaper"
         "hypridle"
+        "hyprpolkitagent"
         "cliphist wipe"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
@@ -125,7 +126,7 @@
         "$mainMod, L, exec, hyprlock"
         "$mainMod, Space, exec, rofi -show drun"
         "$mainMod SHIFT, Space, exec, rofi -show window"
-        "$mainMod SHIFT, Escape, exec, rofi -show powermenu"
+        "$mainMod SHIFT, Escape, exec, $HOME/.config/rofi/powermenu.sh"
         "$mainMod SHIFT, V, exec, cliphist list | rofi -dmenu -theme cliphist | cliphist decode | wl-copy"
 
         "$mainMod, left, movefocus, l"

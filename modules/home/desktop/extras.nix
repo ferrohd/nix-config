@@ -6,6 +6,7 @@
     pkgs.unstable.grimblast
     pkgs.unstable.hyprpaper
     pkgs.unstable.hyprpicker
+    pkgs.unstable.hyprpolkitagent
 
     # ── Wayland tools (stable is fine) ─────────────────────────────────
     pkgs.slurp

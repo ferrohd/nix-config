@@ -1,6 +1,35 @@
 { pkgs, lib, ... }:
 
 {
+  # ── Powermenu script ────────────────────────────────────────────────────
+  home.file.".config/rofi/powermenu.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      # Rofi-based powermenu
+
+      lock="  Lock"
+      suspend="  Suspend"
+      hibernate="  Hibernate"
+      reboot="  Reboot"
+      shutdown="  Shutdown"
+
+      chosen=$(printf '%s\n' "$lock" "$suspend" "$hibernate" "$reboot" "$shutdown" \
+        | rofi -dmenu \
+               -p "Power" \
+               -i \
+               -theme-str 'window { width: 220px; } listview { lines: 5; }')
+
+      case "$chosen" in
+        "$lock")      hyprlock ;;
+        "$suspend")   systemctl suspend ;;
+        "$hibernate") systemctl hibernate ;;
+        "$reboot")    systemctl reboot ;;
+        "$shutdown")  systemctl poweroff ;;
+      esac
+    '';
+  };
+
   programs.rofi = {
     enable = true;
     # rofi-wayland has been merged into rofi on unstable — pin from there

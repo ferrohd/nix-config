@@ -19,7 +19,8 @@
     # XDG Desktop Portal (screen sharing, file pickers, etc.)
     xdg.portal = {
       enable = true;
-      extraPortals = [ ];
+      # gtk portal provides file pickers and other dialogs for non-Hyprland-native apps
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     };
 
     # Required by home-manager useUserPackages + xdg.portal
@@ -27,5 +28,11 @@
 
     # dconf (GNOME settings backend, used by GTK apps)
     programs.dconf.enable = true;
+
+    # ── GNOME Keyring (libsecret / SSH agent) ──────────────────────────
+    services.gnome.gnome-keyring.enable = true;
+    security.pam.services.login.enableGnomeKeyring = true;
+    # Also unlock keyring on TTY login (the path used by autostart-from-TTY setup)
+    security.pam.services.su.enableGnomeKeyring = true;
   };
 }
