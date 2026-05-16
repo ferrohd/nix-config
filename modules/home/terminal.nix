@@ -7,7 +7,6 @@
     package = pkgs.unstable.ghostty;
     settings = {
       font-family = "JetBrainsMono Nerd Font";
-      font-size = 14;
       #theme = "catppuccin-mocha";
       theme = "stylix";
       background-opacity = 0.85;
@@ -29,7 +28,6 @@
     enable = true;
     settings = {
       font_family = "JetBrainsMono Nerd Font";
-      font_size = 14;
       window_padding_width = 8;
       hide_window_decorations = "titlebar-only";
       confirm_os_window_close = 0;
