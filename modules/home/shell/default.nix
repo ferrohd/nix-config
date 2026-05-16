@@ -45,9 +45,6 @@
       # Fast directory switching
       eval "$(zoxide init zsh)"
 
-      # direnv hook
-      eval "$(direnv hook zsh)"
-
       # Completions not covered by OMZ plugins
       source <(kustomize completion zsh 2>/dev/null)
       source <(argocd completion zsh 2>/dev/null)

@@ -129,6 +129,8 @@
     discord
     pavucontrol
     brightnessctl
+    obs-studio
+    vlc
   ];
 
   # ── XDG directories ────────────────────────────────────────────────────
