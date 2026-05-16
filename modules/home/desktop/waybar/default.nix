@@ -28,6 +28,7 @@
           "custom/cliphist"
           "cpu"
           "memory"
+          "network"
           "pulseaudio"
           "clock"
           "tray"
@@ -74,6 +75,16 @@
           tooltip = true;
         };
 
+        network = {
+          interval = 2;
+          format-ethernet = "󰈀  {bandwidthUpBytes}  {bandwidthDownBytes}";
+          format-wifi = "  {bandwidthUpBytes}  {bandwidthDownBytes}";
+          format-disconnected = "󰌙 disconnected";
+          tooltip-format-ethernet = "{ifname}  {ipaddr}/{cidr}\n  {gwaddr}\n  {bandwidthUpBytes}   {bandwidthDownBytes}";
+          tooltip-format-wifi = "{essid} ({signalStrength}%)  {ipaddr}/{cidr}\n  {gwaddr}\n  {bandwidthUpBytes}   {bandwidthDownBytes}";
+          tooltip-format-disconnected = "Disconnected";
+        };
+
         pulseaudio = {
           format = "{icon} {volume}%";
           format-bluetooth = "{icon} {volume}% ";
@@ -104,8 +115,8 @@
         };
 
         "custom/cliphist" = {
-          format = "";
-          on-click = "cliphist list | rofi -dmenu -theme cliphist | cliphist decode | wl-copy";
+          format = "󰅍";
+          on-click = "cliphist list | rofi -dmenu | cliphist decode | wl-copy";
           tooltip = false;
         };
       };

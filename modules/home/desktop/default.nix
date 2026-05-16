@@ -127,7 +127,7 @@
         "$mainMod, Space, exec, rofi -show drun"
         "$mainMod SHIFT, Space, exec, rofi -show window"
         "$mainMod SHIFT, Escape, exec, $HOME/.config/rofi/powermenu.sh"
-        "$mainMod SHIFT, V, exec, cliphist list | rofi -dmenu -theme cliphist | cliphist decode | wl-copy"
+        "$mainMod SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
 
         "$mainMod, left, movefocus, l"
         "$mainMod, right, movefocus, r"

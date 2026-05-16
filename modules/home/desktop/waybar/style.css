@@ -73,6 +73,7 @@ window#waybar.hidden {
 
 #cpu,
 #memory,
+#network,
 #pulseaudio,
 #clock,
 #custom-cliphist {
@@ -88,6 +89,14 @@ window#waybar.hidden {
 
 #memory {
   color: #a6e3a1;
+}
+
+#network {
+  color: #94e2d5;
+}
+
+#network.disconnected {
+  color: #585b70;
 }
 
 #pulseaudio {

@@ -102,7 +102,6 @@
     wget
     btop
     eza
-    bat
     ripgrep
     fd
     sd
@@ -132,6 +131,10 @@
     obs-studio
     vlc
   ];
+
+  # ── bat ────────────────────────────────────────────────────────────────
+  # theme is managed by Stylix (base16-stylix); enabling the program is enough
+  programs.bat.enable = true;
 
   # ── XDG directories ────────────────────────────────────────────────────
   xdg = {

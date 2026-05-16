@@ -8,14 +8,14 @@
   # Used for: Hyprland desktop stack, Ghostty, kernel + Nvidia drivers, etc.
   (final: _prev: {
     unstable = import nixpkgs-unstable {
-      inherit (final) system;
+      inherit (final.stdenv.hostPlatform) system;
       config.allowUnfree = true;
     };
   })
 
   # ── OpenCode (from its own flake) ────────────────────────────────────────
-  (_final: _prev: {
-    opencode = opencode.packages.${_final.system}.default;
+  (final: _prev: {
+    opencode = opencode.packages.${final.stdenv.hostPlatform.system}.default;
   })
 
   # ── Custom packages from pkgs/ ───────────────────────────────────────────
