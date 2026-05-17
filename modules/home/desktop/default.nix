@@ -13,7 +13,7 @@
   # ── Auto-start Hyprland from TTY1 ──────────────────────────────────────
   programs.zsh.initContent = lib.mkAfter ''
     if [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
-      exec Hyprland
+      exec start-hyprland
     fi
   '';
 
