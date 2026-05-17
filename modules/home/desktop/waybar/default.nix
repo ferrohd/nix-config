@@ -26,6 +26,7 @@
         ];
         modules-right = [
           "custom/cliphist"
+          "mpris"
           "cpu"
           "memory"
           "network"
@@ -118,6 +119,20 @@
           format = "󰅍";
           on-click = "cliphist list | rofi -dmenu | cliphist decode | wl-copy";
           tooltip = false;
+        };
+
+        mpris = {
+          format = "{player_icon} {title}";
+          format-paused = " {title}";
+          player-icons = {
+            default = "";
+            mpv = "";
+          };
+          status-icons = {
+            paused = "";
+          };
+          max-length = 35;
+          tooltip-format = "{title} — {artist}\n{player}";
         };
       };
     };

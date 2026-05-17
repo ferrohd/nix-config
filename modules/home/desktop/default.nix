@@ -37,9 +37,10 @@
       exec-once = [
         "waybar"
         "dunst"
-        "hyprpaper"
         "hypridle"
         "hyprpolkitagent"
+        "nm-applet --indicator"
+        "blueman-applet"
         "cliphist wipe"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
@@ -163,12 +164,13 @@
         "$mainMod, mouse_down, workspace, e+1"
         "$mainMod, mouse_up, workspace, e-1"
 
-        ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume +5"
-        ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -5"
         ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
 
-        ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
-        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+        ", XF86AudioPlay, exec, playerctl play-pause"
+        ", XF86AudioPause, exec, playerctl pause"
+        ", XF86AudioNext, exec, playerctl next"
+        ", XF86AudioPrev, exec, playerctl previous"
+        ", XF86AudioStop, exec, playerctl stop"
 
         ", Print, exec, grimblast copy area"
         "Shift, Print, exec, grimblast save output"
@@ -178,6 +180,13 @@
       bindm = [
         "$mainMod, mouse:272, movewindow"
         "$mainMod, mouse:273, resizewindow"
+      ];
+
+      bindel = [
+        ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume +5"
+        ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -5"
+        ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
+        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
       ];
     };
 
@@ -202,13 +211,32 @@
     '';
   };
 
+  # ── Hyprpaper ───────────────────────────────────────────────────────────
+  services.hyprpaper = {
+    enable = true;
+    package = pkgs.unstable.hyprpaper;
+    settings = {
+      preload = [ "${./wallpaper}" ];
+      wallpaper = [ ",${./wallpaper}" ];
+    };
+  };
+
   # ── GTK ─────────────────────────────────────────────────────────────────
   # gtk4.theme = null is the HM 26.05+ default; Stylix manages GTK4 theming directly.
   gtk.gtk4.theme = null;
 
+  gtk.iconTheme = {
+    package = pkgs.catppuccin-papirus-folders.override {
+      accent = "mauve";
+      flavor = "mocha";
+    };
+    name = "Papirus-Dark";
+  };
+
   # ── Stylix ──────────────────────────────────────────────────────────────
   # Tell Stylix which Firefox profile to theme (only set on desktop where Stylix HM module is loaded)
   stylix.targets.firefox.profileNames = [ "ferro" ];
+  stylix.targets.qt.enable = true;
 
   # ── Cursor ──────────────────────────────────────────────────────────────
   home.pointerCursor = {
