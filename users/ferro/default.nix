@@ -178,5 +178,8 @@
   # ── OBS Studio ──────────────────────────────────────────────────────────
   programs.obs-studio.enable = lib.mkIf isDesktop true;
 
+  # ── Zed ────────────────────────────────────────────────────────────────
+  programs.zed-editor.enable = lib.mkIf isDesktop true;
+
   programs.home-manager.enable = true;
 }
