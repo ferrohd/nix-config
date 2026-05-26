@@ -219,6 +219,13 @@
     };
   };
 
+  # ── Qt (Kvantum) ───────────────────────────────────────────────────────
+  qt = {
+    enable = true;
+    style.name = "kvantum";
+    platformTheme.name = "kvantum";
+  };
+
   # ── GTK ─────────────────────────────────────────────────────────────────
   gtk.iconTheme = {
     package = pkgs.catppuccin-papirus-folders.override {

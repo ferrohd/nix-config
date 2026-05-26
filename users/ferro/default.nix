@@ -126,15 +126,8 @@
     kitty
     discord
     brightnessctl
-    obs-studio
     vlc
   ];
-
-  # ── CLI programs (themed by catppuccin/nix) ──────────────────────────────
-  programs.bat.enable = true;
-  programs.btop.enable = true;
-  programs.eza.enable = true;
-  programs.k9s.enable = true;
 
   # ── XDG directories ────────────────────────────────────────────────────
   xdg = {
@@ -182,6 +175,9 @@
       };
     };
   };
+
+  # ── OBS Studio ──────────────────────────────────────────────────────────
+  programs.obs.enable = lib.mkIf isDesktop true;
 
   programs.home-manager.enable = true;
 }

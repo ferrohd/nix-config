@@ -61,6 +61,12 @@
     config.global.warn_timeout = "30s";
   };
 
+  # ── CLI tools ────────────────────────────────────────────────────────────
+  programs.bat.enable = true;
+  programs.btop.enable = true;
+  programs.eza.enable = true;
+  programs.k9s.enable = true;
+
   # ── FZF ─────────────────────────────────────────────────────────────────
   programs.fzf = {
     enable = true;
