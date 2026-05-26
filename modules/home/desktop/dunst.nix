@@ -41,7 +41,6 @@ _:
         icon_position = "left";
         min_icon_size = 32;
         max_icon_size = 48;
-        icon_path = "/usr/share/icons/Hicolor/16x16/status/:/usr/share/icons/Hicolor/16x16/devices/";
         browser = "firefox";
         dmenu = "rofi -dmenu";
         layer = "overlay";

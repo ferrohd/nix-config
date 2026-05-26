@@ -91,7 +91,6 @@
     # ── Kubernetes / DevOps ───────────────────────────────────────────
     kubectl
     kubernetes-helm
-    k9s
     kubectx
     kustomize
     fluxcd
@@ -102,8 +101,6 @@
     # ── Modern CLI ────────────────────────────────────────────────────
     curl
     wget
-    btop
-    eza
     ripgrep
     fd
     sd
@@ -133,8 +130,11 @@
     vlc
   ];
 
-  # ── bat ────────────────────────────────────────────────────────────────
+  # ── CLI programs (themed by catppuccin/nix) ──────────────────────────────
   programs.bat.enable = true;
+  programs.btop.enable = true;
+  programs.eza.enable = true;
+  programs.k9s.enable = true;
 
   # ── XDG directories ────────────────────────────────────────────────────
   xdg = {
