@@ -181,5 +181,11 @@
   # ── Zed ────────────────────────────────────────────────────────────────
   programs.zed-editor.enable = lib.mkIf isDesktop true;
 
+  # ── Zathura (PDF viewer) ───────────────────────────────────────────────
+  programs.zathura.enable = lib.mkIf isDesktop true;
+
+  # ── Imv (image viewer) ─────────────────────────────────────────────────
+  programs.imv.enable = lib.mkIf isDesktop true;
+
   programs.home-manager.enable = true;
 }
