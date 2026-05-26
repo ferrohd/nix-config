@@ -107,7 +107,6 @@
     dust
     duf
     bottom
-    zoxide
     fzf
     jq
     yq-go
@@ -177,7 +176,7 @@
   };
 
   # ── OBS Studio ──────────────────────────────────────────────────────────
-  programs.obs.enable = lib.mkIf isDesktop true;
+  programs.obs-studio.enable = lib.mkIf isDesktop true;
 
   programs.home-manager.enable = true;
 }

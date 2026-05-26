@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, lib, inputs, isDesktop, ... }:
 
 {
   imports = [
@@ -21,7 +21,9 @@
   users.defaultUserShell = pkgs.zsh;
 
   # ── Wayland env ─────────────────────────────────────────────────────────
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  environment.sessionVariables = lib.mkIf isDesktop {
+    NIXOS_OZONE_WL = "1";
+  };
 
   # ── Nixpkgs ─────────────────────────────────────────────────────────────
   nixpkgs = {
