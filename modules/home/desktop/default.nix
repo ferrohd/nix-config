@@ -26,9 +26,7 @@
       "$mainMod" = "SUPER";
 
       env = [
-        "XCURSOR_THEME,catppuccin-mocha-dark-cursors"
         "XCURSOR_SIZE,24"
-        "HYPRCURSOR_THEME,Catppuccin Mocha Dark"
         "HYPRCURSOR_SIZE,24"
       ];
 
@@ -50,8 +48,8 @@
         gaps_in = 6;
         gaps_out = 12;
         border_size = 2;
-        "col.active_border" = lib.mkForce "rgba(cba6f7ff) rgba(89b4faff) 45deg";
-        "col.inactive_border" = lib.mkForce "rgba(585b70ff)";
+        "col.active_border" = "rgba(cba6f7ff) rgba(89b4faff) 45deg";
+        "col.inactive_border" = "rgba(585b70ff)";
         layout = "dwindle";
       };
 
@@ -74,7 +72,7 @@
           enabled = true;
           range = 20;
           render_power = 3;
-          color = lib.mkForce "rgba(00000055)";
+          color = "rgba(00000055)";
         };
       };
 
@@ -222,9 +220,6 @@
   };
 
   # ── GTK ─────────────────────────────────────────────────────────────────
-  # gtk4.theme = null is the HM 26.05+ default; Stylix manages GTK4 theming directly.
-  gtk.gtk4.theme = null;
-
   gtk.iconTheme = {
     package = pkgs.catppuccin-papirus-folders.override {
       accent = "mauve";
@@ -233,16 +228,13 @@
     name = "Papirus-Dark";
   };
 
-  # ── Stylix ──────────────────────────────────────────────────────────────
-  # Tell Stylix which Firefox profile to theme (only set on desktop where Stylix HM module is loaded)
-  stylix.targets.firefox.profileNames = [ "ferro" ];
-  stylix.targets.qt.enable = true;
-
   # ── Cursor ──────────────────────────────────────────────────────────────
+  catppuccin.cursors = {
+    enable = true;
+    accent = "dark";
+  };
   home.pointerCursor = {
-    package = lib.mkForce pkgs.catppuccin-cursors.mochaDark;
-    name = lib.mkForce "catppuccin-mocha-dark-cursors";
-    size = lib.mkForce 24;
+    size = 24;
     gtk.enable = true;
     x11.enable = true;
     hyprcursor = {

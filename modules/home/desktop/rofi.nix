@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   # ── Powermenu script ────────────────────────────────────────────────────
@@ -35,7 +35,7 @@
     # rofi-wayland has been merged into rofi on unstable — pin from there
     package = pkgs.unstable.rofi;
     plugins = [ pkgs.unstable.rofi-calc ];
-    font = lib.mkForce "JetBrainsMono Nerd Font 13";
+    font = "JetBrainsMono Nerd Font 13";
     terminal = "ghostty";
     extraConfig = {
       modi = "drun,window,run,calc";

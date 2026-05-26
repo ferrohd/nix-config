@@ -68,7 +68,6 @@ _:
       navigate = true;
       line-numbers = true;
       side-by-side = false;
-      syntax-theme = "Catppuccin Mocha";
       dark = true;
     };
   };

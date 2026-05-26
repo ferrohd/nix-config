@@ -1,13 +1,5 @@
 _:
 
-# Catppuccin Mocha palette:
-# base:    #1e1e2e  surface0: #313244  overlay0: #6c7086
-# text:    #cdd6f4  subtext1: #bac2de  subtext0: #a6adc8
-# mauve:   #cba6f7  blue:     #89b4fa  sapphire: #74c7ec
-# sky:     #89dceb  teal:     #94e2d5  green:    #a6e3a1
-# yellow:  #f9e2af  peach:    #fab387  red:      #f38ba8
-# flamingo:#f2cdcd  lavender: #b4befe
-
 {
   programs.starship = {
     enable = true;
@@ -21,9 +13,9 @@ _:
 
       # ── Prompt character ───────────────────────────────────────────────
       character = {
-        success_symbol = "[❯](bold #cba6f7)";
-        error_symbol = "[❯](bold #f38ba8)";
-        vimcmd_symbol = "[❮](bold #a6e3a1)";
+        success_symbol = "[❯](bold mauve)";
+        error_symbol = "[❯](bold red)";
+        vimcmd_symbol = "[❮](bold green)";
       };
 
       # ── OS / user / host ───────────────────────────────────────────────
@@ -31,21 +23,21 @@ _:
 
       username = {
         show_always = false;
-        style_user = "bg:#313244 fg:#cdd6f4 bold";
-        style_root = "bg:#313244 fg:#f38ba8 bold";
+        style_user = "bg:surface0 fg:text bold";
+        style_root = "bg:surface0 fg:red bold";
         format = "[ $user ]($style)";
       };
 
       hostname = {
         ssh_only = true;
-        style = "bg:#313244 fg:#89b4fa bold";
+        style = "bg:surface0 fg:blue bold";
         format = "[@$hostname ]($style)";
       };
 
       # ── Directory ──────────────────────────────────────────────────────
       directory = {
-        style = "bold #89b4fa";
-        read_only_style = "#f38ba8";
+        style = "bold blue";
+        read_only_style = "red";
         truncation_length = 4;
         truncate_to_repo = true;
         read_only = " 󰌾";
@@ -57,13 +49,13 @@ _:
 
       # ── Git ────────────────────────────────────────────────────────────
       git_branch = {
-        style = "bold #cba6f7";
+        style = "bold mauve";
         symbol = " ";
         format = "[$symbol$branch(:$remote_branch)]($style) ";
       };
 
       git_status = {
-        style = "#f9e2af";
+        style = "yellow";
         format = "([$all_status$ahead_behind]($style) )";
         conflicted = "󰩌 ";
         ahead = "⇡$count ";
@@ -80,59 +72,59 @@ _:
       # ── Kubernetes ────────────────────────────────────────────────────
       kubernetes = {
         disabled = false;
-        style = "bold #94e2d5";
+        style = "bold teal";
         symbol = "󱃾 ";
         format = "[$symbol$context( \\($namespace\\))]($style) ";
         contexts = [
           {
             context_pattern = ".*";
-            style = "bold #94e2d5";
+            style = "bold teal";
           }
         ];
       };
 
       helm = {
         disabled = false;
-        style = "#89dceb";
+        style = "sky";
         symbol = "⎈ ";
         format = "[$symbol($version)]($style) ";
       };
 
       terraform = {
         disabled = false;
-        style = "#b4befe";
+        style = "lavender";
         symbol = "󱁢 ";
         format = "[$symbol($version)]($style) ";
       };
 
       # ── Languages (show only when relevant) ───────────────────────────
       rust = {
-        style = "bold #fab387";
+        style = "bold peach";
         symbol = " ";
         format = "[$symbol($version)]($style) ";
       };
 
       python = {
-        style = "#f9e2af";
+        style = "yellow";
         symbol = " ";
         format = "[$symbol($version)(\\($virtualenv\\))]($style) ";
         python_binary = [ "python3" "python" ];
       };
 
       nodejs = {
-        style = "#a6e3a1";
+        style = "green";
         symbol = " ";
         format = "[$symbol($version)]($style) ";
       };
 
       golang = {
-        style = "#89dceb";
+        style = "sky";
         symbol = " ";
         format = "[$symbol($version)]($style) ";
       };
 
       java = {
-        style = "#f38ba8";
+        style = "red";
         symbol = " ";
         format = "[$symbol($version)]($style) ";
       };
@@ -144,14 +136,14 @@ _:
 
       cmd_duration = {
         min_time = 2000;
-        style = "#a6adc8";
+        style = "subtext0";
         show_milliseconds = false;
         format = "[ 󱎫 $duration]($style) ";
       };
 
       time = {
         disabled = false;
-        style = "#6c7086";
+        style = "overlay0";
         format = "[ $time]($style)";
         time_format = "%H:%M";
       };

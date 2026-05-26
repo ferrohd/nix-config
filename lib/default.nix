@@ -31,6 +31,9 @@ in
         flake = inputs.self;
         isDesktop = desktop;
       };
+
+      # Single source of truth for theming — change flavor/accent here
+      catppuccinDefaults = { catppuccin = { enable = true; flavor = "mocha"; accent = "mauve"; }; };
     in
     lib.nixosSystem {
       inherit system specialArgs;
@@ -48,6 +51,8 @@ in
         inputs.sops-nix.nixosModules.sops
 
         # ── Theming ───────────────────────────────────────────────────
+        inputs.catppuccin.nixosModules.catppuccin
+        catppuccinDefaults
       ]
       # ── Secure Boot (opt-in per host) ─────────────────────────────────
       ++ lib.optionals secureBoot [
@@ -56,7 +61,6 @@ in
       ]
       # ── Desktop / GUI modules ─────────────────────────────────────────
       ++ lib.optionals desktop [
-        inputs.stylix.nixosModules.stylix
         ../modules/nixos/hyprland.nix
         ../modules/nixos/audio.nix
         ../modules/nixos/bluetooth.nix
@@ -72,6 +76,10 @@ in
             useUserPackages = true;
             backupFileExtension = "hm-backup";
             extraSpecialArgs = specialArgs;
+            sharedModules = [
+              inputs.catppuccin.homeModules.catppuccin
+              catppuccinDefaults
+            ];
             users = lib.genAttrs users (user: import ../users/${user});
           };
         }
