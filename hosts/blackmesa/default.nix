@@ -19,26 +19,6 @@
   };
   services.xserver.videoDrivers = [ "nvidia" ];
 
-  # ── PipeWire ────────────────────────────────────────────────────────────
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
-  };
-
-  # ── File manager ────────────────────────────────────────────────────────
-  programs.thunar = {
-    enable = true;
-    plugins = with pkgs.xfce; [
-      thunar-volman
-      thunar-archive-plugin
-    ];
-  };
-  services.gvfs.enable = true;
-  services.tumbler.enable = true;
-
   # ── Thunderbolt ─────────────────────────────────────────────────────────
   services.hardware.bolt.enable = true;
 

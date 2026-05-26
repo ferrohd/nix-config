@@ -64,6 +64,7 @@ in
         ../modules/nixos/hyprland.nix
         ../modules/nixos/audio.nix
         ../modules/nixos/bluetooth.nix
+        ../modules/nixos/filemanager.nix
         ../modules/nixos/gaming.nix
         { myconfig.hyprland.enable = true; }
       ]

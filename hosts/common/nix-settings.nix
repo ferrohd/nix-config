@@ -57,7 +57,5 @@
       options = "--delete-older-than 7d";
     };
 
-    # Optimise store after every build
-    optimise.automatic = true;
   };
 }
