@@ -19,9 +19,7 @@
     stateVersion = "25.11";
   };
 
-  # ── Neovim (enable + defaults from common module) ───────────────────────
-  catppuccin.nvim.enable = false;
-
+  # ── Neovim ──────────────────────────────────────────────────────────────
   programs.neovim = {
     enable = true;
     defaultEditor = true;

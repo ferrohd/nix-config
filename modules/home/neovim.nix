@@ -1,6 +1,34 @@
 { pkgs, ... }:
 
 {
+  # ── Theme (delegated to catppuccin/nix module) ────────────────────────────
+  # Plugin install, setup() call, and colorscheme command are handled by the
+  # module. Flavor is inherited from lib/default.nix via catppuccinDefaults.
+  catppuccin.nvim.settings = {
+    transparent_background = false;
+    integrations = {
+      cmp = true;
+      gitsigns = true;
+      telescope = { enabled = true; };
+      treesitter = true;
+      which_key = true;
+      bufferline = true;
+      indent_blankline = { enabled = true; };
+      noice = true;
+      notify = true;
+      lsp_trouble = false;
+      native_lsp = {
+        enabled = true;
+        underlines = {
+          errors = [ "underline" ];
+          hints = [ "underline" ];
+          warnings = [ "underline" ];
+          information = [ "underline" ];
+        };
+      };
+    };
+  };
+
   programs.neovim = {
     # LSP servers and tools available to neovim
     extraPackages = with pkgs; [
@@ -23,9 +51,6 @@
     ];
 
     plugins = with pkgs.vimPlugins; [
-      # ── Theme ──────────────────────────────────────────────────────────
-      catppuccin-nvim
-
       # ── UI ─────────────────────────────────────────────────────────────
       lualine-nvim
       bufferline-nvim
@@ -91,34 +116,6 @@
       opt.showmode       = false   -- lualine shows the mode
       opt.mouse          = ""      -- disable mouse
 
-      -- ── Theme ────────────────────────────────────────────────────────────
-      require("catppuccin").setup({
-        flavour          = "mocha",
-        transparent_background = false,
-        integrations = {
-          cmp            = true,
-          gitsigns       = true,
-          telescope      = { enabled = true },
-          treesitter     = true,
-          which_key      = true,
-          bufferline     = true,
-          indent_blankline = { enabled = true },
-          noice          = true,
-          notify         = true,
-          lsp_trouble    = false,
-          native_lsp = {
-            enabled = true,
-            underlines = {
-              errors      = { "underline" },
-              hints       = { "underline" },
-              warnings    = { "underline" },
-              information = { "underline" },
-            },
-          },
-        },
-      })
-      vim.cmd.colorscheme("catppuccin")
-
       -- ── Noice ────────────────────────────────────────────────────────────
       require("noice").setup({
         lsp = {
@@ -137,7 +134,6 @@
 
       -- ── Notify ───────────────────────────────────────────────────────────
       require("notify").setup({
-        background_colour = "#1e1e2e",
         render            = "compact",
         timeout           = 3000,
       })
