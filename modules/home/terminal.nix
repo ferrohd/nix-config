@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   # ── Ghostty (primary terminal) ──────────────────────────────────────────
@@ -7,8 +7,6 @@
     package = pkgs.unstable.ghostty;
     settings = {
       font-family = "JetBrainsMono Nerd Font";
-      #theme = "catppuccin-mocha";
-      theme = "stylix";
       background-opacity = 0.85;
       background-blur-radius = 20;
       cursor-style = "bar";
@@ -31,7 +29,7 @@
       window_padding_width = 8;
       hide_window_decorations = "titlebar-only";
       confirm_os_window_close = 0;
-      background_opacity = lib.mkForce "0.85";
+      background_opacity = "0.85";
       enable_audio_bell = "no";
       cursor_shape = "beam";
       cursor_blink_interval = "0.5";
@@ -80,7 +78,6 @@
       yank
       resurrect
       continuum
-      catppuccin
     ];
   };
 

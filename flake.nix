@@ -22,10 +22,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # ── Theming ─────────────────────────────────────────────────────────
-    stylix = {
-      url = "github:danth/stylix/release-25.11";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    catppuccin.url = "github:catppuccin/nix/release-25.11";
 
     # ── Secrets management ──────────────────────────────────────────────
     sops-nix = {

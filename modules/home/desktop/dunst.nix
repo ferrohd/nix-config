@@ -1,4 +1,4 @@
-{ lib, ... }:
+_:
 
 {
   services.dunst = {
@@ -28,7 +28,7 @@
         text_icon_padding = 8;
         frame_width = 2;
         gap_size = 6;
-        separator_color = lib.mkForce "frame";
+        separator_color = "frame";
         sort = "urgency";
         line_height = 4;
         markup = "full";
@@ -41,7 +41,6 @@
         icon_position = "left";
         min_icon_size = 32;
         max_icon_size = 48;
-        icon_path = "/usr/share/icons/Hicolor/16x16/status/:/usr/share/icons/Hicolor/16x16/devices/";
         browser = "firefox";
         dmenu = "rofi -dmenu";
         layer = "overlay";

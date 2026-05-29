@@ -42,9 +42,6 @@
     };
 
     initContent = ''
-      # Fast directory switching
-      eval "$(zoxide init zsh)"
-
       # Completions not covered by OMZ plugins
       source <(kustomize completion zsh 2>/dev/null)
       source <(argocd completion zsh 2>/dev/null)
@@ -54,12 +51,24 @@
 
   programs.starship.enableZshIntegration = true;
 
+  # ── Zoxide (fast directory switching) ───────────────────────────────────
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   # ── Direnv (per-directory environments) ─────────────────────────────────
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
     config.global.warn_timeout = "30s";
   };
+
+  # ── CLI tools ────────────────────────────────────────────────────────────
+  programs.bat.enable = true;
+  programs.btop.enable = true;
+  programs.eza.enable = true;
+  programs.k9s.enable = true;
 
   # ── FZF ─────────────────────────────────────────────────────────────────
   programs.fzf = {

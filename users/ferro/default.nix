@@ -20,6 +20,8 @@
   };
 
   # ── Neovim (enable + defaults from common module) ───────────────────────
+  catppuccin.nvim.enable = false;
+
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -89,7 +91,6 @@
     # ── Kubernetes / DevOps ───────────────────────────────────────────
     kubectl
     kubernetes-helm
-    k9s
     kubectx
     kustomize
     fluxcd
@@ -100,15 +101,12 @@
     # ── Modern CLI ────────────────────────────────────────────────────
     curl
     wget
-    btop
-    eza
     ripgrep
     fd
     sd
     dust
     duf
     bottom
-    zoxide
     fzf
     jq
     yq-go
@@ -126,15 +124,9 @@
     # ghostty is provided by programs.ghostty (pinned to unstable in terminal.nix)
     kitty
     discord
-    pavucontrol
     brightnessctl
-    obs-studio
     vlc
   ];
-
-  # ── bat ────────────────────────────────────────────────────────────────
-  # theme is managed by Stylix (base16-stylix); enabling the program is enough
-  programs.bat.enable = true;
 
   # ── XDG directories ────────────────────────────────────────────────────
   xdg = {
@@ -173,6 +165,7 @@
         force = true;
       };
       extensions = {
+        force = true;
         packages = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
           ublock-origin
           bitwarden
@@ -182,6 +175,18 @@
       };
     };
   };
+
+  # ── OBS Studio ──────────────────────────────────────────────────────────
+  programs.obs-studio.enable = lib.mkIf isDesktop true;
+
+  # ── Zed ────────────────────────────────────────────────────────────────
+  programs.zed-editor.enable = lib.mkIf isDesktop true;
+
+  # ── Zathura (PDF viewer) ───────────────────────────────────────────────
+  programs.zathura.enable = lib.mkIf isDesktop true;
+
+  # ── Imv (image viewer) ─────────────────────────────────────────────────
+  programs.imv.enable = lib.mkIf isDesktop true;
 
   programs.home-manager.enable = true;
 }

@@ -6,9 +6,6 @@
     # Polkit for privilege escalation (used by Hyprland, etc.)
     polkit.enable = true;
 
-    # Real-time kit (audio latency)
-    rtkit.enable = true;
-
     # Disable sudo lecture, keep timeout short
     sudo = {
       enable = true;
