@@ -20,6 +20,6 @@
 
   # ── Custom packages from pkgs/ ───────────────────────────────────────────
   (final: _prev: {
-    custom-package = final.callPackage ../pkgs/custom-package { };
+    apple-color-emoji = final.callPackage ../pkgs/apple-color-emoji { };
   })
 ]

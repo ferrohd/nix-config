@@ -15,7 +15,8 @@
       inter
       noto-fonts
       noto-fonts-cjk-sans
-      noto-fonts-color-emoji
+      noto-fonts-color-emoji  # fallback for missing/broken glyphs
+      apple-color-emoji
       liberation_ttf
 
       # Coding
@@ -28,7 +29,7 @@
         serif = [ "Noto Serif" "Liberation Serif" ];
         sansSerif = [ "Inter" "Noto Sans" ];
         monospace = [ "JetBrainsMono Nerd Font" ];
-        emoji = [ "Noto Color Emoji" ];
+        emoji = [ "Apple Color Emoji" "Noto Color Emoji" ];
       };
       # Subpixel rendering
       subpixel.rgba = "rgb";

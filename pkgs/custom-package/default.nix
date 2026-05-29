@@ -1,5 +1,7 @@
 # pkgs/custom-package/default.nix
 # ── Template for a custom package ────────────────────────────────────────
+# This is an example/reference. To use it, copy this directory, rename, fill
+# in real values, and wire it into overlays/default.nix as a callPackage entry.
 { lib, stdenv, fetchFromGitHub }:
 
 stdenv.mkDerivation rec {
