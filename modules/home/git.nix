@@ -120,7 +120,6 @@ _:
 
       git = {
         auto-local-bookmark = true;
-        sign-on-push = true;
       };
 
       templates = {
