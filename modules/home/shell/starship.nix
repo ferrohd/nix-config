@@ -5,9 +5,7 @@ _:
     enable = true;
 
     settings = {
-      format = ''
-        $username$hostname$directory$git_branch$git_status$kubernetes$helm$terraform$rust$python$nodejs$golang$java$fill$cmd_duration$time
-        $character'';
+      format = ''$all'';
 
       add_newline = true;
 
@@ -50,7 +48,7 @@ _:
       # ── Git ────────────────────────────────────────────────────────────
       git_branch = {
         style = "bold mauve";
-        symbol = " ";
+        symbol = "󰘬 ";
         format = "[$symbol$branch(:$remote_branch)]($style) ";
       };
 
@@ -86,7 +84,7 @@ _:
       helm = {
         disabled = false;
         style = "sky";
-        symbol = "⎈ ";
+        symbol = "󱍳 ";
         format = "[$symbol($version)]($style) ";
       };
 
@@ -100,32 +98,32 @@ _:
       # ── Languages (show only when relevant) ───────────────────────────
       rust = {
         style = "bold peach";
-        symbol = " ";
+        symbol = " ";
         format = "[$symbol($version)]($style) ";
       };
 
       python = {
         style = "yellow";
-        symbol = " ";
+        symbol = " ";
         format = "[$symbol($version)(\\($virtualenv\\))]($style) ";
         python_binary = [ "python3" "python" ];
       };
 
       nodejs = {
         style = "green";
-        symbol = " ";
+        symbol = "󰎙 ";
         format = "[$symbol($version)]($style) ";
       };
 
       golang = {
         style = "sky";
-        symbol = " ";
+        symbol = " ";
         format = "[$symbol($version)]($style) ";
       };
 
       java = {
         style = "red";
-        symbol = " ";
+        symbol = " ";
         format = "[$symbol($version)]($style) ";
       };
 
