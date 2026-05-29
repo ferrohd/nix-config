@@ -33,7 +33,7 @@
 │       │   ├── default.nix            # Zsh config, direnv, fzf
 │       │   ├── aliases.nix            # Git, k8s, Docker, Nix, modern CLI
 │       │   └── starship.nix           # Elaborate Catppuccin Mocha prompt
-│       ├── git.nix                    # Git + delta + lazygit + gh + SSH signing
+│       ├── git.nix                    # Git + delta + lazygit + gh + jj + SSH signing
 │       ├── neovim.nix                 # Full IDE: LSP, Telescope, Treesitter, cmp
 │       ├── terminal.nix               # Kitty + Tmux (Catppuccin)
 │       └── desktop/                   # Hyprland + desktop environment

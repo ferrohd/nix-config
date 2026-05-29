@@ -96,4 +96,41 @@ _:
       };
     };
   };
+
+  # ── Jujutsu (jj) ────────────────────────────────────────────────────────
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = {
+        name = "Alessandro Ferrara";
+        email = "aleferrara1998@gmail.com";
+      };
+
+      ui = {
+        default-command = "log";
+        pager = "delta";
+        diff-formatter = [ "delta" "--color-only" "$left" "$right" ];
+      };
+
+      signing = {
+        behavior = "own";
+        backend = "ssh";
+        key = "~/.ssh/id_ed25519.pub";
+      };
+
+      git = {
+        push-bookmark-prefix = "ferro/push-";
+        auto-local-bookmark = true;
+      };
+
+      aliases = {
+        l = [ "log" ];
+        s = [ "status" ];
+        d = [ "diff" ];
+        n = [ "new" ];
+        e = [ "edit" ];
+        tug = [ "bookmark" "move" "--from" "closest_bookmark(@-)" "--to" "@-" ];
+      };
+    };
+  };
 }

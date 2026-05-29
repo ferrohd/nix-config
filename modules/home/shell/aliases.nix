@@ -34,6 +34,19 @@ _:
     gb = "git branch";
     glog = "git log --oneline --graph --decorate";
 
+    # ── Jujutsu shortcuts ─────────────────────────────────────────────
+    j = "jj";
+    jst = "jj status";
+    jl = "jj log";
+    jd = "jj diff";
+    jn = "jj new";
+    je = "jj edit";
+    jc = "jj commit";
+    jds = "jj describe";
+    jsq = "jj squash";
+    jgp = "jj git push";
+    jgf = "jj git fetch";
+
     # ── Kubernetes ────────────────────────────────────────────────────
     k = "kubectl";
     kctx = "kubectx";
