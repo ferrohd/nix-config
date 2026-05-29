@@ -30,6 +30,7 @@
         "XCURSOR_SIZE,24"
         "HYPRCURSOR_THEME,Catppuccin Mocha Dark"
         "HYPRCURSOR_SIZE,24"
+        "STEAM_FORCE_DESKTOPUI_SCALING,1.5" # scale Steam UI to match Hyprland fractional scale
       ];
 
       cursor.no_hardware_cursors = false;
@@ -117,6 +118,10 @@
         force_default_wallpaper = 0;
         disable_hyprland_logo = true;
         vfr = true;
+      };
+
+      xwayland = {
+        force_zero_scaling = true; # XWayland reports native res; fixes blurry/mispositioned XWayland windows on fractional scale
       };
 
       bind = [
