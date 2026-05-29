@@ -119,8 +119,14 @@ _:
       };
 
       git = {
-        push-bookmark-prefix = "ferro/push-";
         auto-local-bookmark = true;
+        sign-on-push = true;
+      };
+
+      templates = {
+        # Bookmark name auto-generated when pushing a change to a Git remote.
+        # Replaces the deprecated git.push-bookmark-prefix (jj 0.35+).
+        git_push_bookmark = ''"ferro/push-" ++ change_id.short()'';
       };
 
       aliases = {

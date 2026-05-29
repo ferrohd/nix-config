@@ -5,6 +5,7 @@
     # ── Shared modules ────────────────────────────────────────────────
     ../../modules/home/shell
     ../../modules/home/git.nix
+    ../../modules/home/halloy.nix
     ../../modules/home/neovim.nix
     ../../modules/home/terminal.nix
   ]
