@@ -20,202 +20,195 @@
   # ── Hyprland user config ────────────────────────────────────────────────
   wayland.windowManager.hyprland = {
     enable = true;
-    package = pkgs.unstable.hyprland;
-    # Stay on hyprlang. HM 26.05's "lua" default is a different config paradigm
-    # (variables via _var, binds via _args + mkLuaInline, etc.), not a syntax
-    # rename. Migrating requires rewriting all binds/rules.
-    configType = "hyprlang";
+    # nixos-26.05 ships Hyprland 0.55.2 (full lua mode); unstable lags at 0.54.3 (partial lua).
+    package = pkgs.hyprland;
+    configType = "lua";
 
     settings = {
-      "$mainMod" = "SUPER";
+      # ── Variables (render as `local mod = "SUPER"`) ─────────────────────
+      mod = { _var = "SUPER"; };
 
+      # ── Structured sections (single hl.config call) ─────────────────────
+      config = {
+        general = {
+          gaps_in = 6;
+          gaps_out = 12;
+          border_size = 2;
+          layout = "dwindle";
+          col = {
+            active_border = {
+              colors = [ "rgba(cba6f7ff)" "rgba(89b4faff)" ];
+              angle = 45;
+            };
+            inactive_border = "rgba(585b70ff)";
+          };
+        };
+
+        decoration = {
+          rounding = 12;
+          active_opacity = 1.0;
+          inactive_opacity = 0.9;
+          fullscreen_opacity = 1.0;
+          blur = {
+            enabled = true;
+            size = 8;
+            passes = 3;
+            new_optimizations = true;
+            ignore_opacity = false;
+            xray = false;
+          };
+          shadow = {
+            enabled = true;
+            range = 20;
+            render_power = 3;
+            color = "rgba(00000055)";
+          };
+        };
+
+        animations.enabled = true;
+
+        input = {
+          kb_layout = "it";
+          kb_variant = "";
+          kb_model = "";
+          kb_options = "";
+          kb_rules = "";
+          follow_mouse = 1;
+          sensitivity = 0;
+          accel_profile = "flat";
+          touchpad.natural_scroll = true;
+        };
+
+        dwindle = {
+          preserve_split = true;
+          force_split = 2;
+        };
+
+        misc = {
+          force_default_wallpaper = 0;
+          disable_hyprland_logo = true;
+        };
+
+        xwayland.force_zero_scaling = true;
+
+        cursor.no_hardware_cursors = 0;
+      };
+
+      # ── Beziers (one hl.curve per entry) ────────────────────────────────
+      curve = [
+        { _args = [ "overshot"  { type = "bezier"; points = [ [ 0.05 0.9 ] [ 0.1  1.15    ] ]; } ]; }
+        { _args = [ "smoothOut" { type = "bezier"; points = [ [ 0.36 0   ] [ 0.66 (-0.56) ] ]; } ]; }
+        { _args = [ "smoothIn"  { type = "bezier"; points = [ [ 0.25 1   ] [ 0.5  1       ] ]; } ]; }
+      ];
+
+      # ── Animations (one hl.animation per entry) ─────────────────────────
+      animation = [
+        { leaf = "windows";     enabled = true; speed = 4;  bezier = "overshot";  style = "slide"; }
+        { leaf = "windowsOut";  enabled = true; speed = 4;  bezier = "smoothOut"; style = "slide"; }
+        { leaf = "fade";        enabled = true; speed = 4;  bezier = "smoothIn"; }
+        { leaf = "workspaces";  enabled = true; speed = 6;  bezier = "overshot";  style = "slide"; }
+        { leaf = "border";      enabled = true; speed = 10; bezier = "default"; }
+        { leaf = "borderangle"; enabled = true; speed = 8;  bezier = "default"; }
+      ];
+
+      # ── Env vars (two-arg form via _args) ───────────────────────────────
       env = [
-        "XCURSOR_SIZE,24"
-        "HYPRCURSOR_SIZE,24"
-        "STEAM_FORCE_DESKTOPUI_SCALING,1.5" # scale Steam UI to match Hyprland fractional scale
+        { _args = [ "XCURSOR_SIZE" "24" ]; }
+        { _args = [ "HYPRCURSOR_SIZE" "24" ]; }
+        { _args = [ "STEAM_FORCE_DESKTOPUI_SCALING" "1.5" ]; } # scale Steam UI to match Hyprland fractional scale
       ];
 
-      cursor.no_hardware_cursors = false;
-
-      exec-once = [
-        "waybar"
-        "dunst"
-        "hypridle"
-        "hyprpolkitagent"
-        "nm-applet --indicator"
-        "blueman-applet"
-        "cliphist wipe"
-        "wl-paste --type text --watch cliphist store"
-        "wl-paste --type image --watch cliphist store"
-      ];
-
-      general = {
-        gaps_in = 6;
-        gaps_out = 12;
-        border_size = 2;
-        "col.active_border" = "rgba(cba6f7ff) rgba(89b4faff) 45deg";
-        "col.inactive_border" = "rgba(585b70ff)";
-        layout = "dwindle";
-      };
-
-      decoration = {
-        rounding = 12;
-        active_opacity = 1.0;
-        inactive_opacity = 0.9;
-        fullscreen_opacity = 1.0;
-
-        blur = {
-          enabled = true;
-          size = 8;
-          passes = 3;
-          new_optimizations = true;
-          ignore_opacity = false;
-          xray = false;
-        };
-
-        shadow = {
-          enabled = true;
-          range = 20;
-          render_power = 3;
-          color = "rgba(00000055)";
-        };
-      };
-
-      animations = {
-        enabled = true;
-        bezier = [
-          "overshot, 0.05, 0.9, 0.1, 1.15"
-          "smoothOut, 0.36, 0, 0.66, -0.56"
-          "smoothIn, 0.25, 1, 0.5, 1"
-        ];
-        animation = [
-          "windows, 1, 4, overshot, slide"
-          "windowsOut, 1, 4, smoothOut, slide"
-          "fade, 1, 4, smoothIn"
-          "workspaces, 1, 6, overshot, slide"
-          "border, 1, 10, default"
-          "borderangle, 1, 8, default"
+      # ── Autostart (single hl.on hook wrapping all execs) ────────────────
+      on = {
+        _args = [
+          "hyprland.start"
+          (lib.generators.mkLuaInline ''
+            function()
+              hl.exec_cmd("waybar")
+              hl.exec_cmd("dunst")
+              hl.exec_cmd("hypridle")
+              hl.exec_cmd("hyprpolkitagent")
+              hl.exec_cmd("nm-applet --indicator")
+              hl.exec_cmd("blueman-applet")
+              hl.exec_cmd("cliphist wipe")
+              hl.exec_cmd("wl-paste --type text --watch cliphist store")
+              hl.exec_cmd("wl-paste --type image --watch cliphist store")
+            end
+          '')
         ];
       };
 
-      input = {
-        kb_layout = "it";
-        kb_variant = "";
-        kb_model = "";
-        kb_options = "";
-        kb_rules = "";
-        follow_mouse = 1;
-        touchpad.natural_scroll = true;
-        sensitivity = 0;
-        accel_profile = "flat";
-      };
-
-      dwindle = {
-        pseudotile = true;
-        preserve_split = true;
-        force_split = 2;
-      };
-
-      misc = {
-        force_default_wallpaper = 0;
-        disable_hyprland_logo = true;
-        vfr = true;
-      };
-
-      xwayland = {
-        force_zero_scaling = true; # XWayland reports native res; fixes blurry/mispositioned XWayland windows on fractional scale
-      };
-
-      bind = [
-        "$mainMod, Return, exec, ghostty"
-        "$mainMod, Q, killactive,"
-        "$mainMod, D, togglefloating,"
-        "$mainMod, F, fullscreen,"
-        "$mainMod, L, exec, hyprlock"
-        "$mainMod, Space, exec, rofi -show drun"
-        "$mainMod SHIFT, Space, exec, rofi -show window"
-        "$mainMod SHIFT, Escape, exec, $HOME/.config/rofi/powermenu.sh"
-        "$mainMod SHIFT, V, exec, cliphist list | rofi -dmenu | cliphist decode | wl-copy"
-
-        "$mainMod, left, movefocus, l"
-        "$mainMod, right, movefocus, r"
-        "$mainMod, up, movefocus, u"
-        "$mainMod, down, movefocus, d"
-        "$mainMod SHIFT, left, movewindow, l"
-        "$mainMod SHIFT, right, movewindow, r"
-        "$mainMod SHIFT, up, movewindow, u"
-        "$mainMod SHIFT, down, movewindow, d"
-
-        "$mainMod, 1, workspace, 1"
-        "$mainMod, 2, workspace, 2"
-        "$mainMod, 3, workspace, 3"
-        "$mainMod, 4, workspace, 4"
-        "$mainMod, 5, workspace, 5"
-        "$mainMod, 6, workspace, 6"
-        "$mainMod, 7, workspace, 7"
-        "$mainMod, 8, workspace, 8"
-        "$mainMod, 9, workspace, 9"
-        "$mainMod, 0, workspace, 10"
-
-        "$mainMod SHIFT, 1, movetoworkspace, 1"
-        "$mainMod SHIFT, 2, movetoworkspace, 2"
-        "$mainMod SHIFT, 3, movetoworkspace, 3"
-        "$mainMod SHIFT, 4, movetoworkspace, 4"
-        "$mainMod SHIFT, 5, movetoworkspace, 5"
-        "$mainMod SHIFT, 6, movetoworkspace, 6"
-        "$mainMod SHIFT, 7, movetoworkspace, 7"
-        "$mainMod SHIFT, 8, movetoworkspace, 8"
-        "$mainMod SHIFT, 9, movetoworkspace, 9"
-        "$mainMod SHIFT, 0, movetoworkspace, 10"
-
-        "$mainMod, mouse_down, workspace, e+1"
-        "$mainMod, mouse_up, workspace, e-1"
-
-        ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
-
-        ", XF86AudioPlay, exec, playerctl play-pause"
-        ", XF86AudioPause, exec, playerctl pause"
-        ", XF86AudioNext, exec, playerctl next"
-        ", XF86AudioPrev, exec, playerctl previous"
-        ", XF86AudioStop, exec, playerctl stop"
-
-        ", Print, exec, grimblast copy area"
-        "Shift, Print, exec, grimblast save output"
-        "$mainMod, Print, exec, grimblast save area | swappy -f -"
+      # ── Window rules (combined per matcher) ─────────────────────────────
+      window_rule = [
+        { match.class = "^(kitty)$";              opacity = "1.0 override 0.9 override 0.9 override"; }
+        { match.class = "^(ghostty)$";            opacity = "1.0 override 0.9 override 0.9 override"; }
+        { match.class = "^(pavucontrol)$";        float = true; center = true; }
+        { match.class = "^(blueman-manager)$";    float = true; }
+        { match.title = "^(Picture-in-Picture)$"; float = true; pin = true; }
+        { match.title = "^(Volume Control)$";     float = true; }
+        { match.class = "^(rofi)$";               no_blur = true; }
+        { match.class = "^(waybar)$";             no_blur = true; }
+        { match.fullscreen = true;                immediate = true; }
       ];
 
-      bindm = [
-        "$mainMod, mouse:272, movewindow"
-        "$mainMod, mouse:273, resizewindow"
+      # ── Layer rules ─────────────────────────────────────────────────────
+      layer_rule = [
+        { match.namespace = "waybar"; blur = true; ignore_alpha = 0; }
+        { match.namespace = "dunst";  blur = true; ignore_alpha = 0; }
       ];
-
-      bindel = [
-        ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume +5"
-        ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -5"
-        ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
-        ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
-      ];
-
     };
 
-    # Hyprland v0.54 requires match: prefix for windowrule and layerrule matchers
+    # ── Binds (raw Lua — cleaner than _args + mkLuaInline for 60+ entries) ─
     extraConfig = ''
-      layerrule = blur on, match:namespace waybar
-      layerrule = blur on, match:namespace dunst
-      layerrule = ignore_alpha 0, match:namespace waybar
-      layerrule = ignore_alpha 0, match:namespace dunst
+      -- Applications
+      hl.bind(mod .. " + Return",         hl.dsp.exec_cmd("ghostty"))
+      hl.bind(mod .. " + Q",              hl.dsp.window.close())
+      hl.bind(mod .. " + D",              hl.dsp.window.float({ action = "toggle" }))
+      hl.bind(mod .. " + F",              hl.dsp.window.fullscreen())
+      hl.bind(mod .. " + L",              hl.dsp.exec_cmd("hyprlock"))
+      hl.bind(mod .. " + Space",          hl.dsp.exec_cmd("rofi -show drun"))
+      hl.bind(mod .. " + SHIFT + Space",  hl.dsp.exec_cmd("rofi -show window"))
+      hl.bind(mod .. " + SHIFT + Escape", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/rofi/powermenu.sh"))
+      hl.bind(mod .. " + SHIFT + V",      hl.dsp.exec_cmd("cliphist list | rofi -dmenu | cliphist decode | wl-copy"))
 
-      windowrule = match:class ^(kitty)$, opacity 1.0 override 0.9 override 0.9 override
-      windowrule = match:class ^(ghostty)$, opacity 1.0 override 0.9 override 0.9 override
-      windowrule = match:class ^(pavucontrol)$, float on
-      windowrule = match:class ^(blueman-manager)$, float on
-      windowrule = match:title ^(Picture-in-Picture)$, float on
-      windowrule = match:title ^(Picture-in-Picture)$, pin on
-      windowrule = match:title ^(Volume Control)$, float on
-      windowrule = match:class ^(pavucontrol)$, center on
-      windowrule = match:class ^(rofi)$, no_blur on
-      windowrule = match:class ^(waybar)$, no_blur on
-      windowrule = match:fullscreen 1, immediate on
+      -- Focus / move (directional)
+      for _, dir in ipairs({ "left", "right", "up", "down" }) do
+        hl.bind(mod .. " + " .. dir,         hl.dsp.focus({ direction = dir }))
+        hl.bind(mod .. " + SHIFT + " .. dir, hl.dsp.window.move({ direction = dir }))
+      end
+
+      -- Workspaces 1..10 (key 0 → workspace 10)
+      for i = 1, 10 do
+        local key = i % 10
+        hl.bind(mod .. " + " .. key,         hl.dsp.focus({ workspace = i }))
+        hl.bind(mod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+      end
+
+      -- Mouse scroll workspace
+      hl.bind(mod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
+      hl.bind(mod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
+
+      -- Media (transport: locked; vol/brightness: locked + repeating)
+      hl.bind("XF86AudioMute",  hl.dsp.exec_cmd("swayosd-client --output-volume mute-toggle"), { locked = true })
+      hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+      hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl pause"),      { locked = true })
+      hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })
+      hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
+      hl.bind("XF86AudioStop",  hl.dsp.exec_cmd("playerctl stop"),       { locked = true })
+
+      hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("swayosd-client --output-volume +5"), { locked = true, repeating = true })
+      hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("swayosd-client --output-volume -5"), { locked = true, repeating = true })
+      hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("brightnessctl set +5%"),             { locked = true, repeating = true })
+      hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 5%-"),             { locked = true, repeating = true })
+
+      -- Screenshots
+      hl.bind("Print",           hl.dsp.exec_cmd("grimblast copy area"))
+      hl.bind("SHIFT + Print",   hl.dsp.exec_cmd("grimblast save output"))
+      hl.bind(mod .. " + Print", hl.dsp.exec_cmd("grimblast save area | swappy -f -"))
+
+      -- Mouse drag/resize
+      hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
+      hl.bind(mod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
     '';
   };
 

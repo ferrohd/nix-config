@@ -12,8 +12,9 @@
     programs.hyprland = {
       enable = true;
       xwayland.enable = true;
-      package = pkgs.unstable.hyprland;
-      portalPackage = pkgs.unstable.xdg-desktop-portal-hyprland;
+      # nixos-26.05 has Hyprland 0.55.2 (lua mode complete); unstable lags at 0.54.3 (partial lua).
+      package = pkgs.hyprland;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
     };
 
     # XDG Desktop Portal (screen sharing, file pickers, etc.)
