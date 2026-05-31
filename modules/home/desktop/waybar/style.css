@@ -1,0 +1,106 @@
+@define-color accent @mauve;
+
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 13px;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+}
+
+window#waybar {
+  background-color: @base;
+  color: @text;
+  border-radius: 12px;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+  background-color: @base;
+  border-radius: 12px;
+}
+
+#workspaces button {
+  padding: 0 8px;
+  color: @subtext0;
+  background: transparent;
+  border-radius: 8px;
+  min-width: 24px;
+}
+
+#workspaces button.active {
+  color: @accent;
+  background: @surface0;
+}
+
+#workspaces button:hover {
+  background: @surface1;
+  color: @text;
+}
+
+#clock,
+#cpu,
+#memory,
+#network,
+#pulseaudio,
+#tray,
+#mpris,
+#custom-launcher,
+#custom-cliphist {
+  padding: 0 12px;
+  color: @text;
+}
+
+#custom-launcher {
+  color: @accent;
+  font-size: 16px;
+}
+
+#clock {
+  color: @blue;
+}
+
+#cpu {
+  color: @green;
+}
+
+#memory {
+  color: @yellow;
+}
+
+#network {
+  color: @sapphire;
+}
+
+#pulseaudio {
+  color: @teal;
+}
+
+#pulseaudio.muted {
+  color: @overlay1;
+}
+
+#mpris {
+  color: @pink;
+}
+
+#tray {
+  padding: 0 8px;
+}
+
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: @red;
+}
+
+tooltip {
+  background: @mantle;
+  border: 1px solid @surface1;
+  border-radius: 8px;
+  color: @text;
+}

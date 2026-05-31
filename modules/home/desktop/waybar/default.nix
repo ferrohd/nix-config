@@ -5,6 +5,8 @@
     enable = true;
     package = pkgs.unstable.waybar;
 
+    style = builtins.readFile ./style.css;
+
     settings = {
       mainBar = {
         layer = "top";
