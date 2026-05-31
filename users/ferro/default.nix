@@ -7,6 +7,7 @@
     ../../modules/home/git.nix
     ../../modules/home/halloy.nix
     ../../modules/home/neovim.nix
+    ../../modules/home/spotify-player.nix
     ../../modules/home/terminal.nix
   ]
   ++ lib.optionals isDesktop [
