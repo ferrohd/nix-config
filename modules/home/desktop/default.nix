@@ -21,6 +21,10 @@
   wayland.windowManager.hyprland = {
     enable = true;
     package = pkgs.unstable.hyprland;
+    # Stay on hyprlang. HM 26.05's "lua" default is a different config paradigm
+    # (variables via _var, binds via _args + mkLuaInline, etc.), not a syntax
+    # rename. Migrating requires rewriting all binds/rules.
+    configType = "hyprlang";
 
     settings = {
       "$mainMod" = "SUPER";
@@ -191,6 +195,7 @@
         ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
         ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
       ];
+
     };
 
     # Hyprland v0.54 requires match: prefix for windowrule and layerrule matchers

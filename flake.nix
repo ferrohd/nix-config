@@ -5,7 +5,7 @@
 
   inputs = {
     # ── Core ────────────────────────────────────────────────────────────
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # ── Flake infrastructure ────────────────────────────────────────────
@@ -14,7 +14,7 @@
 
     # ── Home Manager ────────────────────────────────────────────────────
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -22,7 +22,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     # ── Theming ─────────────────────────────────────────────────────────
-    catppuccin.url = "github:catppuccin/nix/release-25.11";
+    catppuccin.url = "github:catppuccin/nix/release-26.05";
 
     # ── Secrets management ──────────────────────────────────────────────
     sops-nix = {
@@ -49,7 +49,7 @@
     };
 
     # ── Dev tools ───────────────────────────────────────────────────────
-    opencode.url = "github:anomalyco/opencode";
+    opencode.url = "github:anomalyco/opencode/0f31fd631b22fa29eb62e3d188fe52818c645f20";
   };
 
   outputs = inputs@{ self, flake-parts, ... }:

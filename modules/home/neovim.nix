@@ -86,7 +86,7 @@
       luasnip
     ];
 
-    extraLuaConfig = ''
+    initLua = ''
       -- ── Options ──────────────────────────────────────────────────────────
       vim.g.mapleader      = " "
       vim.g.maplocalleader = " "

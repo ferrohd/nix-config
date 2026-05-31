@@ -52,24 +52,24 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks = {
+    settings = {
       "*" = {
-        addKeysToAgent = "yes";
+        AddKeysToAgent = "yes";
       };
       "github.com" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = "~/.ssh/id_ed25519";
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/id_ed25519";
       };
       "gitlab.com" = {
-        hostname = "gitlab.com";
-        user = "git";
-        identityFile = "~/.ssh/id_ed25519";
+        HostName = "gitlab.com";
+        User = "git";
+        IdentityFile = "~/.ssh/id_ed25519";
       };
       "server" = {
-        hostname = "server.tail0000.ts.net"; # Replace with your Tailscale hostname
-        user = "ferro";
-        identityFile = "~/.ssh/id_ed25519";
+        HostName = "server.tail0000.ts.net"; # Replace with your Tailscale hostname
+        User = "ferro";
+        IdentityFile = "~/.ssh/id_ed25519";
       };
     };
   };
@@ -134,6 +134,7 @@
     userDirs = {
       enable = true;
       createDirectories = true;
+      setSessionVariables = false;
     };
     mimeApps = lib.mkIf isDesktop {
       enable = true;
