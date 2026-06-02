@@ -121,9 +121,6 @@
     ouch
   ] ++ lib.optionals isDesktop [
     # ── Desktop apps ──────────────────────────────────────────────────
-    # ghostty is provided by programs.ghostty (pinned to unstable in terminal.nix)
-    kitty
-    discord
     brightnessctl
     vlc
   ];
@@ -178,6 +175,21 @@
   };
   catppuccin.firefox = lib.mkIf isDesktop {
     profiles.ferro.enable = true;
+  };
+
+  # ── Vesktop ─────────────────────────────────────────────────────────────
+  programs.vesktop = lib.mkIf isDesktop {
+    enable = true;
+    # FakeNitro — only want stream quality bypass (1080p60 / higher bitrate
+    # screen share). enableStreamQualityBypass defaults to true but is set
+    # explicitly here to document intent. The emoji/sticker bypasses also
+    # default to true, so they must be disabled.
+    vencord.settings.plugins.FakeNitro = {
+      enabled = true;
+      enableStreamQualityBypass = true;
+      enableEmojiBypass = false;
+      enableStickerBypass = false;
+    };
   };
 
   # ── OBS Studio ──────────────────────────────────────────────────────────
