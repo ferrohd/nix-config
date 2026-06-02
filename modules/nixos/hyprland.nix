@@ -35,5 +35,8 @@
     security.pam.services.login.enableGnomeKeyring = true;
     # Also unlock keyring on TTY login (the path used by autostart-from-TTY setup)
     security.pam.services.su.enableGnomeKeyring = true;
+
+    # ── Plymouth boot splash theme ─────────────────────────────────────
+    catppuccin.plymouth.enable = true;
   };
 }

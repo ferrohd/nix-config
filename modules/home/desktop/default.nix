@@ -37,10 +37,13 @@
           layout = "dwindle";
           col = {
             active_border = {
-              colors = [ "rgba(cba6f7ff)" "rgba(89b4faff)" ];
+              colors = [
+                (lib.generators.mkLuaInline "colors.mauve")
+                (lib.generators.mkLuaInline "colors.blue")
+              ];
               angle = 45;
             };
-            inactive_border = "rgba(585b70ff)";
+            inactive_border = lib.generators.mkLuaInline "colors.surface2";
           };
         };
 
@@ -227,15 +230,6 @@
     enable = true;
     style.name = "kvantum";
     platformTheme.name = "kvantum";
-  };
-
-  # ── GTK ─────────────────────────────────────────────────────────────────
-  gtk.iconTheme = {
-    package = pkgs.catppuccin-papirus-folders.override {
-      accent = "mauve";
-      flavor = "mocha";
-    };
-    name = "Papirus-Dark";
   };
 
   # ── Cursor ──────────────────────────────────────────────────────────────

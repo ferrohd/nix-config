@@ -176,6 +176,9 @@
       };
     };
   };
+  catppuccin.firefox = lib.mkIf isDesktop {
+    profiles.ferro.enable = true;
+  };
 
   # ── OBS Studio ──────────────────────────────────────────────────────────
   programs.obs-studio.enable = lib.mkIf isDesktop true;
