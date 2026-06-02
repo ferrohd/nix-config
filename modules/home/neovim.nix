@@ -70,7 +70,8 @@
       plenary-nvim
 
       # ── Editing ────────────────────────────────────────────────────────
-      nvim-treesitter.withAllGrammars
+      # TODO: migrate to new nvim-treesitter API before nixos-26.11 (legacy attr will be removed)
+      nvim-treesitter-legacy.withAllGrammars
       nvim-autopairs
       comment-nvim
 
