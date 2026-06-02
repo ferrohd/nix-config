@@ -9,6 +9,7 @@
     integrations = {
       cmp = true;
       gitsigns = true;
+      lualine = true;
       telescope = { enabled = true; };
       treesitter = true;
       which_key = true;
@@ -142,7 +143,7 @@
       -- ── Lualine ──────────────────────────────────────────────────────────
       require("lualine").setup({
         options = {
-          theme                = "catppuccin",
+          theme                = "auto",
           component_separators = { left = "", right = "" },
           section_separators   = { left = "", right = "" },
           globalstatus         = true,
