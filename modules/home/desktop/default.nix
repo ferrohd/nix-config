@@ -242,6 +242,9 @@
     platformTheme.name = "kvantum";
   };
 
+  # ── GTK ────────────────────────────────────────────────────────────────
+  gtk.enable = true;
+
   # ── Cursor ──────────────────────────────────────────────────────────────
   catppuccin.cursors = {
     enable = true;

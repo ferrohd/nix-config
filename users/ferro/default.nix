@@ -7,6 +7,7 @@
     ../../modules/home/git.nix
     ../../modules/home/halloy.nix
     ../../modules/home/neovim.nix
+    ../../modules/home/newsboat.nix
     ../../modules/home/spotify-player.nix
     ../../modules/home/terminal.nix
   ]
