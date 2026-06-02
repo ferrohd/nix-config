@@ -28,6 +28,8 @@
     lm_sensors
     pciutils
     usbutils
+    mesa-demos
+    vulkan-tools
   ];
 
   system.stateVersion = "25.11";
