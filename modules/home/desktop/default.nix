@@ -218,10 +218,20 @@
   # ── Hyprpaper ───────────────────────────────────────────────────────────
   services.hyprpaper = {
     enable = true;
-    package = pkgs.unstable.hyprpaper;
+    package = pkgs.hyprpaper;
     settings = {
-      preload = [ "${./wallpaper}" ];
-      wallpaper = [ ",${./wallpaper}" ];
+      wallpaper = [
+        {
+          monitor = "DP-1";
+          path = "${./wallpaper.png}";
+          fit_mode = "cover";
+        }
+        {
+          monitor = "DP-2";
+          path = "${./wallpaper.png}";
+          fit_mode = "cover";
+        }
+      ];
     };
   };
 
