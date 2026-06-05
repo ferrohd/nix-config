@@ -100,20 +100,3 @@ age-keygen -y ~/.config/sops/age/keys.txt  # put this in .sops.yaml
 just secrets-common
 just secrets blackmesa
 ```
-
-## What was fixed from the draft config
-
-- `rofi` → `rofi-wayland` (X11 rofi doesn't work properly under Hyprland)
-- Added missing user groups: `docker`, `video`, `audio`, `input`, `render`
-- Added nix GC, store optimisation, binary cache config
-- Added firewall with sane defaults
-- Added SSH hardening (key-only, no root, max 3 attempts)
-- Added kernel sysctl hardening
-- Added Docker + Podman with auto-prune
-- Added sops-nix secrets management
-- Added SSH client config with GitHub/GitLab blocks
-- Added direnv + nix-direnv for per-project shells
-- Added delta for beautiful git diffs
-- Added Git SSH commit signing
-- Added tmux with Catppuccin + vim-navigator
-- Structured for multi-host (laptop, server) with `isDesktop` toggle
