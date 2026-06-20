@@ -77,4 +77,18 @@
     defaultCommand = "fd --type f --hidden --follow --exclude .git";
     defaultOptions = [ "--height=40%" "--layout=reverse" "--border" ];
   };
+
+  # ── Atuin (shell history with fuzzy search) ──────────────────────────────
+  # Catppuccin theme (catppuccin-mocha-mauve) is auto-applied via the global
+  # catppuccin module. Atuin binds Ctrl-R and the Up arrow (local-only; no sync).
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
+    settings = {
+      style = "compact";
+      inline_height = 20;
+      show_preview = true;
+      update_check = false; # NixOS manages the version
+    };
+  };
 }
