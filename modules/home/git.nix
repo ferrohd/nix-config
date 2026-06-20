@@ -118,8 +118,10 @@ _:
         key = "~/.ssh/id_ed25519.pub";
       };
 
-      git = {
-        auto-local-bookmark = true;
+      remotes = {
+        origin = {
+          auto-track-bookmarks = "*";
+        };
       };
 
       templates = {
