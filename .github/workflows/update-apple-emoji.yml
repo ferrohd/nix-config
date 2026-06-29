@@ -20,10 +20,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v16
+        uses: DeterminateSystems/nix-installer-action@main
 
       - name: Check upstream release and update package
         id: check
@@ -92,7 +92,7 @@ jobs:
 
       - name: Open pull request
         if: steps.check.outputs.updated == 'true'
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "pkgs/apple-color-emoji: bump to ${{ steps.check.outputs.tag }}"
           branch: bot/apple-color-emoji
