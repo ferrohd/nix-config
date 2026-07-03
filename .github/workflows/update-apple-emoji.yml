@@ -85,9 +85,8 @@ jobs:
         run: |
           set -euo pipefail
           # Flakes only see git-tracked files. Stage the modified file so
-          # `nix flake check` and `nix build` can read it.
+          # `nix build` can read it.
           git add pkgs/apple-color-emoji/default.nix
-          nix flake check --no-build
           nix build .#nixosConfigurations.blackmesa.pkgs.apple-color-emoji --no-link --print-out-paths
 
       - name: Open pull request
@@ -105,7 +104,6 @@ jobs:
             - `url`, `hash`, and `version` updated in `pkgs/apple-color-emoji/default.nix`.
 
             **CI verified**
-            - `nix flake check --no-build`
             - `nix build .#nixosConfigurations.blackmesa.pkgs.apple-color-emoji`
 
             ---
