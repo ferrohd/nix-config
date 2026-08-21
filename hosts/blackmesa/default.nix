@@ -9,7 +9,10 @@
   networking.hostName = "blackmesa";
 
   # ── Nvidia GPU ──────────────────────────────────────────────────────────
-  hardware.graphics.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true; # native games are often ELF32 (L4D2's hl2_linux is)
+  };
   hardware.nvidia = {
     open = true;
     modesetting.enable = true;
@@ -18,6 +21,10 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
   services.xserver.videoDrivers = [ "nvidia" ];
+
+  # Displays attach to the AMD iGPU through the dock, so GLX apps default to
+  # it. Offload all Steam games to the 3090 Ti.
+  myconfig.gaming.nvidiaOffload.enable = true;
 
   # ── Thunderbolt ─────────────────────────────────────────────────────────
   services.hardware.bolt.enable = true;
