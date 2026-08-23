@@ -1,5 +1,5 @@
 # hosts/laptop/home.nix — host-level home-manager config (display layout, hardware-specific HM settings)
-{ ... }:
+_:
 
 {
   home-manager.sharedModules = [

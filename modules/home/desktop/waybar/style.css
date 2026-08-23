@@ -47,9 +47,14 @@ window#waybar {
 #tray,
 #mpris,
 #custom-launcher,
+#idle-inhibitor,
 #custom-cliphist {
   padding: 0 12px;
   color: @text;
+}
+
+#idle-inhibitor.activated {
+  color: @accent;
 }
 
 #custom-launcher {

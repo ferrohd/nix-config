@@ -1,4 +1,4 @@
-{ pkgs, lib, config, inputs, isDesktop, hostname, ... }:
+{ pkgs, lib, config, inputs, isDesktop, ... }:
 
 {
   imports = [
@@ -120,6 +120,8 @@
     nvd
     tealdeer
     ouch
+    unzip # also the extraction backend file-roller shells out to
+    p7zip
   ] ++ lib.optionals isDesktop [
     # ── Desktop apps ──────────────────────────────────────────────────
     brightnessctl

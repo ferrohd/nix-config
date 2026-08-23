@@ -24,6 +24,7 @@
           "hyprland/window"
         ];
         modules-right = [
+          "idle_inhibitor"
           "custom/cliphist"
           "mpris"
           "cpu"
@@ -112,6 +113,15 @@
 
         tray = {
           spacing = 8;
+        };
+
+        idle_inhibitor = {
+          format = "{icon}";
+          format-icons = {
+            activated = "󰅶"; # caffeine on — hypridle suppressed
+            deactivated = "󰛊";
+          };
+          tooltip = true;
         };
 
         "custom/cliphist" = {

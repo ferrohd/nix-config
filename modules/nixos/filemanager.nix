@@ -11,4 +11,10 @@
   };
   services.gvfs.enable = true;
   services.tumbler.enable = true;
+  services.udisks2.enable = true; # required by the udiskie user service
+
+  environment.systemPackages = with pkgs; [
+    file-roller # backend for thunar-archive-plugin (the plugin is a frontend only)
+    ffmpegthumbnailer # video thumbnails for tumbler
+  ];
 }

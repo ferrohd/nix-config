@@ -168,6 +168,7 @@
       hl.bind(mod .. " + B",              hl.dsp.exec_cmd("firefox"))
       hl.bind(mod .. " + E",              hl.dsp.exec_cmd("thunar"))
       hl.bind(mod .. " + Q",              hl.dsp.window.close())
+      hl.bind(mod .. " + SHIFT + Q",      hl.dsp.window.kill())
       hl.bind(mod .. " + D",              hl.dsp.window.float({ action = "toggle" }))
       hl.bind(mod .. " + F",              hl.dsp.window.fullscreen())
       hl.bind(mod .. " + L",              hl.dsp.exec_cmd("hyprlock"))
@@ -175,11 +176,24 @@
       hl.bind(mod .. " + SHIFT + Space",  hl.dsp.exec_cmd("rofi -show window"))
       hl.bind(mod .. " + SHIFT + Escape", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/rofi/powermenu.sh"))
       hl.bind(mod .. " + V",              hl.dsp.exec_cmd("cliphist list | rofi -dmenu | cliphist decode | wl-copy"))
+      hl.bind(mod .. " + period",         hl.dsp.exec_cmd("rofi -show emoji -modi emoji"))
+
+      -- Layout (dwindle)
+      hl.bind(mod .. " + P",       hl.dsp.window.pseudo())
+      hl.bind(mod .. " + J",       hl.dsp.layout("togglesplit"))
+      hl.bind(mod .. " + S",       hl.dsp.workspace.toggle_special("magic"))
+      hl.bind(mod .. " + ALT + S", hl.dsp.window.move({ workspace = "special:magic" }))
 
       -- Focus / move (directional)
       for _, dir in ipairs({ "left", "right", "up", "down" }) do
         hl.bind(mod .. " + " .. dir,         hl.dsp.focus({ direction = dir }))
         hl.bind(mod .. " + SHIFT + " .. dir, hl.dsp.window.move({ direction = dir }))
+      end
+
+      -- Resize (CTRL + arrows)
+      local resizeStep = { left = { -40, 0 }, right = { 40, 0 }, up = { 0, -40 }, down = { 0, 40 } }
+      for dir, d in pairs(resizeStep) do
+        hl.bind(mod .. " + CTRL + " .. dir, hl.dsp.window.resize({ x = d[1], y = d[2] }), { repeating = true })
       end
 
       -- Workspaces 1..10 (key 0 → workspace 10)
@@ -194,7 +208,9 @@
       hl.bind(mod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
 
       -- Media (transport: locked; vol/brightness: locked + repeating)
-      hl.bind("XF86AudioMute",  hl.dsp.exec_cmd("swayosd-client --output-volume mute-toggle"), { locked = true })
+      hl.bind("XF86AudioMute",    hl.dsp.exec_cmd("swayosd-client --output-volume mute-toggle"), { locked = true })
+      hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("swayosd-client --input-volume mute-toggle"),  { locked = true })
+      hl.bind(mod .. " + M",      hl.dsp.exec_cmd("swayosd-client --input-volume mute-toggle"))
       hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
       hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl pause"),      { locked = true })
       hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })
@@ -206,11 +222,13 @@
       hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("brightnessctl set +5%"),             { locked = true, repeating = true })
       hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 5%-"),             { locked = true, repeating = true })
 
-      -- Screenshots
+      -- Screenshots / capture
       hl.bind(mod .. " + SHIFT + S", hl.dsp.exec_cmd("grimblast --freeze copy area"))
-      hl.bind("Print",               hl.dsp.exec_cmd("grimblast copy area"))
+      hl.bind("Print",               hl.dsp.exec_cmd("grimblast --freeze copy area"))
       hl.bind("SHIFT + Print",       hl.dsp.exec_cmd("grimblast save output"))
-      hl.bind(mod .. " + Print",     hl.dsp.exec_cmd("grimblast save area | swappy -f -"))
+      hl.bind(mod .. " + Print",     hl.dsp.exec_cmd("grimblast --freeze save area - | swappy -f -"))
+      hl.bind(mod .. " + SHIFT + C", hl.dsp.exec_cmd("hyprpicker -a"))
+      hl.bind(mod .. " + SHIFT + R", hl.dsp.exec_cmd(os.getenv("HOME") .. "/.config/hypr/record.sh"))
 
       -- Mouse drag/resize
       hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })

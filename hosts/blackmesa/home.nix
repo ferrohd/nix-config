@@ -1,5 +1,5 @@
 # hosts/blackmesa/home.nix — host-level home-manager config (display layout, hardware-specific HM settings)
-{ lib, ... }:
+_:
 
 {
   home-manager.sharedModules = [
