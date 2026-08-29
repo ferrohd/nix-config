@@ -126,6 +126,7 @@
     # ── Desktop apps ──────────────────────────────────────────────────
     brightnessctl
     vlc
+    zsync # delta-updates for AppImages (Eden ships .zsync files)
   ];
 
   # ── XDG directories ────────────────────────────────────────────────────
