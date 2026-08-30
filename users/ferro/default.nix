@@ -125,6 +125,12 @@
   ] ++ lib.optionals isDesktop [
     # ── Desktop apps ──────────────────────────────────────────────────
     brightnessctl
+    # No programs.telegram-desktop module in home-manager and no
+    # catppuccin.telegram module upstream — tdesktop stores its active theme
+    # in tdata/ (opaque binary), so it cannot be set declaratively. Catppuccin
+    # Mocha is applied once in-app via https://t.me/addtheme/ctp_mocha; it is a
+    # cloud theme, so it lives on the account and survives rebuilds.
+    telegram-desktop
     vlc
     zsync # delta-updates for AppImages (Eden ships .zsync files)
   ];

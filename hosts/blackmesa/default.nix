@@ -26,6 +26,11 @@
   # it. Offload all Steam games to the 3090 Ti.
   myconfig.gaming.nvidiaOffload.enable = true;
 
+  # ── Game streaming ──────────────────────────────────────────────────────
+  # Capture/encode land on the AMD iGPU, since the dock drives both displays
+  # from it. Encoder selection is left to Sunshine's autodetection.
+  myconfig.sunshine.enable = true;
+
   # ── Thunderbolt ─────────────────────────────────────────────────────────
   services.hardware.bolt.enable = true;
 

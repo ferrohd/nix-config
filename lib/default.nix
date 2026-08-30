@@ -66,6 +66,9 @@ in
         ../modules/nixos/bluetooth.nix
         ../modules/nixos/filemanager.nix
         ../modules/nixos/gaming.nix
+        # Imported everywhere, but stays off until a host opts in with
+        # myconfig.sunshine.enable (unlike hyprland below).
+        ../modules/nixos/sunshine.nix
         { myconfig.hyprland.enable = true; boot.plymouth.enable = true; }
       ]
       # ── Home-Manager integration ──────────────────────────────────────
