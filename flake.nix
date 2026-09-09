@@ -126,6 +126,20 @@
 
         # ── Overlays ────────────────────────────────────────────────────
         overlays.default = import ./overlays { inherit (inputs) opencode nixpkgs-unstable; };
+
+        # ── Project templates ───────────────────────────────────────────
+        # Scaffold with: nix flake init -t ~/.config/nixos#rust
+        templates = {
+          rust = {
+            path = ./templates/rust;
+            description = "Rust project — pinned stable toolchain via rust-overlay + direnv";
+          };
+          rust-nightly = {
+            path = ./templates/rust-nightly;
+            description = "Rust project — pinned nightly toolchain (+miri) via rust-overlay + direnv";
+          };
+          default = self.templates.rust;
+        };
       };
     };
 }

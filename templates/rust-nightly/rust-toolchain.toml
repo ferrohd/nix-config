@@ -1,0 +1,14 @@
+[toolchain]
+channel = "nightly"
+components = [
+  "rustc",
+  "cargo",
+  "rustfmt",
+  "clippy",
+  # std sources — required for rust-analyzer to resolve `std`
+  "rust-src",
+  # pinned to this toolchain, overrides any rust-analyzer further down PATH
+  "rust-analyzer",
+  # nightly-only: UB / leak detection via `cargo miri test`
+  "miri",
+]

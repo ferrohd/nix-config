@@ -37,10 +37,12 @@
       yaml-language-server
       bash-language-server
       marksman
-      rust-analyzer
       nil
       lua-language-server
       taplo
+      # NOTE: rust-analyzer is intentionally NOT here. It is supplied by each
+      # project's devShell (see `nix flake init -t ~/.config/nixos#rust`) so it
+      # always matches the project's pinned rustc and has rust-src for `std`.
 
       # required by telescope-fzf-native
       gcc
@@ -249,7 +251,18 @@
         yamlls        = {},
         bashls        = {},
         marksman      = {},
-        rust_analyzer = {},
+        -- Binary comes from the project devShell, not the nvim wrapper.
+        -- lspconfig no-ops when the cmd is not executable, so this stays
+        -- quiet outside a Rust project.
+        rust_analyzer = {
+          settings = {
+            ["rust-analyzer"] = {
+              cargo       = { allFeatures = true, buildScripts = { enable = true } },
+              procMacro   = { enable = true },
+              checkOnSave = { command = "clippy" },
+            },
+          },
+        },
         nil_ls        = {},
         lua_ls = {
           settings = {
