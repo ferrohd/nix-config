@@ -99,19 +99,19 @@
 
       # ── Beziers (one hl.curve per entry) ────────────────────────────────
       curve = [
-        { _args = [ "overshot"  { type = "bezier"; points = [ [ 0.05 0.9 ] [ 0.1  1.15    ] ]; } ]; }
-        { _args = [ "smoothOut" { type = "bezier"; points = [ [ 0.36 0   ] [ 0.66 (-0.56) ] ]; } ]; }
-        { _args = [ "smoothIn"  { type = "bezier"; points = [ [ 0.25 1   ] [ 0.5  1       ] ]; } ]; }
+        { _args = [ "overshot" { type = "bezier"; points = [ [ 0.05 0.9 ] [ 0.1 1.15 ] ]; } ]; }
+        { _args = [ "smoothOut" { type = "bezier"; points = [ [ 0.36 0 ] [ 0.66 (-0.56) ] ]; } ]; }
+        { _args = [ "smoothIn" { type = "bezier"; points = [ [ 0.25 1 ] [ 0.5 1 ] ]; } ]; }
       ];
 
       # ── Animations (one hl.animation per entry) ─────────────────────────
       animation = [
-        { leaf = "windows";     enabled = true; speed = 4;  bezier = "overshot";  style = "slide"; }
-        { leaf = "windowsOut";  enabled = true; speed = 4;  bezier = "smoothOut"; style = "slide"; }
-        { leaf = "fade";        enabled = true; speed = 4;  bezier = "smoothIn"; }
-        { leaf = "workspaces";  enabled = true; speed = 6;  bezier = "overshot";  style = "slide"; }
-        { leaf = "border";      enabled = true; speed = 10; bezier = "default"; }
-        { leaf = "borderangle"; enabled = true; speed = 8;  bezier = "default"; }
+        { leaf = "windows"; enabled = true; speed = 4; bezier = "overshot"; style = "slide"; }
+        { leaf = "windowsOut"; enabled = true; speed = 4; bezier = "smoothOut"; style = "slide"; }
+        { leaf = "fade"; enabled = true; speed = 4; bezier = "smoothIn"; }
+        { leaf = "workspaces"; enabled = true; speed = 6; bezier = "overshot"; style = "slide"; }
+        { leaf = "border"; enabled = true; speed = 10; bezier = "default"; }
+        { leaf = "borderangle"; enabled = true; speed = 8; bezier = "default"; }
       ];
 
       # ── Env vars (two-arg form via _args) ───────────────────────────────
@@ -143,21 +143,21 @@
 
       # ── Window rules (combined per matcher) ─────────────────────────────
       window_rule = [
-        { match.class = "^(kitty)$";              opacity = "1.0 override 0.9 override 0.9 override"; }
-        { match.class = "^(ghostty)$";            opacity = "1.0 override 0.9 override 0.9 override"; }
-        { match.class = "^(pavucontrol)$";        float = true; center = true; }
-        { match.class = "^(blueman-manager)$";    float = true; }
+        { match.class = "^(kitty)$"; opacity = "1.0 override 0.9 override 0.9 override"; }
+        { match.class = "^(ghostty)$"; opacity = "1.0 override 0.9 override 0.9 override"; }
+        { match.class = "^(pavucontrol)$"; float = true; center = true; }
+        { match.class = "^(blueman-manager)$"; float = true; }
         { match.title = "^(Picture-in-Picture)$"; float = true; pin = true; }
-        { match.title = "^(Volume Control)$";     float = true; }
-        { match.class = "^(rofi)$";               no_blur = true; }
-        { match.class = "^(waybar)$";             no_blur = true; }
-        { match.fullscreen = true;                immediate = true; }
+        { match.title = "^(Volume Control)$"; float = true; }
+        { match.class = "^(rofi)$"; no_blur = true; }
+        { match.class = "^(waybar)$"; no_blur = true; }
+        { match.fullscreen = true; immediate = true; }
       ];
 
       # ── Layer rules ─────────────────────────────────────────────────────
       layer_rule = [
         { match.namespace = "waybar"; blur = true; ignore_alpha = 0; }
-        { match.namespace = "dunst";  blur = true; ignore_alpha = 0; }
+        { match.namespace = "dunst"; blur = true; ignore_alpha = 0; }
       ];
     };
 

@@ -31,6 +31,10 @@
   # from it. Encoder selection is left to Sunshine's autodetection.
   myconfig.sunshine.enable = true;
 
+  # ── Firewall ────────────────────────────────────────────────────────────
+  # Eden emulator's built-in multiplayer room (LDN) listens here when hosting.
+  networking.firewall.allowedUDPPorts = [ 24872 ];
+
   # ── Thunderbolt ─────────────────────────────────────────────────────────
   services.hardware.bolt.enable = true;
 

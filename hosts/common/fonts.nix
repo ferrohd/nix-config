@@ -15,7 +15,7 @@
       inter
       noto-fonts
       noto-fonts-cjk-sans
-      noto-fonts-color-emoji  # fallback for missing/broken glyphs
+      noto-fonts-color-emoji # fallback for missing/broken glyphs
       apple-color-emoji
       liberation_ttf
 
