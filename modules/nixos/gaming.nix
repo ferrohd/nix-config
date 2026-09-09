@@ -11,7 +11,7 @@
   config = {
     programs.steam = {
       enable = true;
-      gamescopeSession.enable = true; # Gamescope compositor for Steam
+      gamescopeSession.enable = true;
       remotePlay.openFirewall = true;
 
       # extraEnv lands in the FHS env profile wrapped in `set -a`, so it is

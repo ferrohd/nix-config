@@ -45,7 +45,7 @@
 
   # ── Networking tools ────────────────────────────────────────────────────
   environment.systemPackages = with pkgs; [
-    ethtool # NIC link state, speed/duplex, offload and ring-buffer tuning
+    ethtool
     dnsutils # dig, nslookup, host
   ];
 }

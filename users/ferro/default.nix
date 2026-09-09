@@ -75,6 +75,12 @@
     };
   };
 
+  # ── SSH agent ───────────────────────────────────────────────────────────
+  # The key is passphrase-protected and signs commits as well as authenticating
+  # pushes, so without an agent both prompt every time. Exports SSH_AUTH_SOCK
+  # from .zshenv; a forwarded agent is preserved.
+  services.ssh-agent.enable = true;
+
 
 
   # ── Packages ────────────────────────────────────────────────────────────

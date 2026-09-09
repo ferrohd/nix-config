@@ -31,10 +31,10 @@ _:
       fetch.prune = true;
       merge.conflictstyle = "zdiff3";
       diff.algorithm = "histogram";
-      rerere.enabled = true; # Remember conflict resolutions
+      rerere.enabled = true; # remember conflict resolutions
       column.ui = "auto";
       branch.sort = "-committerdate";
-      gpg.format = "ssh"; # Sign commits with SSH key
+      gpg.format = "ssh";
       core = {
         autocrlf = "input";
       };

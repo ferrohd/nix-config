@@ -1,4 +1,3 @@
-# overlays/default.nix
 # ── Package overlays: patch, pin, or add packages to nixpkgs ─────────────
 { opencode, nixpkgs-unstable, ... }:
 

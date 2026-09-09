@@ -31,7 +31,6 @@
   };
 
   programs.neovim = {
-    # LSP servers and tools available to neovim
     extraPackages = with pkgs; [
       # LSP servers
       yaml-language-server
@@ -40,9 +39,8 @@
       nil
       lua-language-server
       taplo
-      # NOTE: rust-analyzer is intentionally NOT here. It is supplied by each
-      # project's devShell (see `nix flake init -t ~/.config/nixos#rust`) so it
-      # always matches the project's pinned rustc and has rust-src for `std`.
+      # rust-analyzer deliberately omitted — each project's devShell supplies a
+      # version matching its pinned rustc (nix flake init -t ~/.config/nixos#rust).
 
       # required by telescope-fzf-native
       gcc
@@ -251,9 +249,8 @@
         yamlls        = {},
         bashls        = {},
         marksman      = {},
-        -- Binary comes from the project devShell, not the nvim wrapper.
-        -- lspconfig no-ops when the cmd is not executable, so this stays
-        -- quiet outside a Rust project.
+        -- Binary comes from the project devShell; lspconfig no-ops when it is
+        -- absent, so this stays quiet outside a Rust project.
         rust_analyzer = {
           settings = {
             ["rust-analyzer"] = {

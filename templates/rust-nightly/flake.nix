@@ -24,10 +24,9 @@
             overlays = [ (import inputs.rust-overlay) ];
           };
 
-          # Single source of truth for the toolchain: rust-toolchain.toml.
-          # `channel = "nightly"` resolves to whichever nightly the pinned
-          # rust-overlay input knows about, so builds stay reproducible —
-          # bump it deliberately with `nix flake update rust-overlay`.
+          # "nightly" resolves to whichever nightly the pinned rust-overlay
+          # input knows about, so builds stay reproducible — move it with
+          # `nix flake update rust-overlay`.
           toolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
         in
         {
@@ -35,18 +34,15 @@
             packages = [
               toolchain
             ] ++ (with pkgs; [
-              # Common native build deps for crates like openssl-sys
+              # native build deps for crates like openssl-sys
               pkg-config
               openssl
-
-              # Fast linker
               mold
             ]);
 
-            # Link with mold instead of the default bfd linker.
-            # Nightly extras worth knowing about, opt in by uncommenting:
-            #   -Zthreads=8            parallel compiler frontend
-            #   -Zmacro-backtrace      full backtraces through macro expansion
+            # nightly extras, opt in by appending:
+            #   -Zthreads=8         parallel compiler frontend
+            #   -Zmacro-backtrace   backtraces through macro expansion
             RUSTFLAGS = "-C link-arg=-fuse-ld=mold";
           };
 

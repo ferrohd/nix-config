@@ -30,8 +30,13 @@
     # dconf (GNOME settings backend, used by GTK apps)
     programs.dconf.enable = true;
 
-    # ── GNOME Keyring (libsecret / SSH agent) ──────────────────────────
+    # ── GNOME Keyring (libsecret / secrets only) ───────────────────────
     services.gnome.gnome-keyring.enable = true;
+
+    # Defaults on with gnome-keyring, but it can only enumerate the SSH key,
+    # not unlock it ("agent refused operation"). home-manager's
+    # services.ssh-agent handles SSH instead.
+    services.gnome.gcr-ssh-agent.enable = false;
     security.pam.services.login.enableGnomeKeyring = true;
     # Also unlock keyring on TTY login (the path used by autostart-from-TTY setup)
     security.pam.services.su.enableGnomeKeyring = true;

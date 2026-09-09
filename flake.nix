@@ -61,25 +61,22 @@
 
       # ── Per-system outputs ────────────────────────────────────────────
       perSystem = { pkgs, ... }: {
-        # Development shell for working on this repo
         devShells.default = pkgs.mkShell {
           name = "nixos-config";
           packages = with pkgs; [
-            nil # Nix LSP
-            nixpkgs-fmt # Formatter
-            statix # Nix linter
-            deadnix # Dead code finder
-            sops # Secrets editor
-            age # Encryption
-            ssh-to-age # Convert SSH keys → age
-            just # Command runner
+            nil
+            nixpkgs-fmt
+            statix
+            deadnix
+            sops
+            age
+            ssh-to-age
+            just
           ];
         };
 
-        # Formatter for `nix fmt`
         formatter = pkgs.nixpkgs-fmt;
 
-        # CI checks
         checks = {
           lint = pkgs.runCommand "lint" { buildInputs = [ pkgs.statix pkgs.deadnix ]; } ''
             cd ${self}
