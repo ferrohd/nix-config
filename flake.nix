@@ -54,7 +54,7 @@
 
   outputs = inputs@{ self, flake-parts, ... }:
     let
-      inherit (import ./lib { inherit inputs; }) mkHost;
+      inherit (import ./lib { inherit inputs; }) mkHost mkDnsHosts;
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" "aarch64-linux" ];
@@ -76,6 +76,13 @@
         };
 
         formatter = pkgs.nixpkgs-fmt;
+
+        # RouterOS side of the anycast DNS fleet, rendered from hosts/dns/nodes.nix
+        packages.mikrotik-dns = pkgs.writeText "dns-anycast.rsc"
+          (import ./lib/mikrotik-dns.nix {
+            inherit (pkgs) lib;
+            dns = import ./hosts/dns/nodes.nix;
+          });
 
         checks = {
           lint = pkgs.runCommand "lint" { buildInputs = [ pkgs.statix pkgs.deadnix ]; } ''
@@ -119,7 +126,9 @@
             desktop = false;
             extraModules = [ ];
           };
-        };
+        }
+        # ── DNS fleet: every node in hosts/dns/nodes.nix ────────────────
+        // mkDnsHosts { users = [ "ferro" ]; };
 
         # ── Overlays ────────────────────────────────────────────────────
         overlays.default = import ./overlays { inherit (inputs) opencode nixpkgs-unstable; };
