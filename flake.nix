@@ -49,7 +49,7 @@
     };
 
     # ── Dev tools ───────────────────────────────────────────────────────
-    opencode.url = "github:anomalyco/opencode/0f31fd631b22fa29eb62e3d188fe52818c645f20";
+    opencode.url = "github:anomalyco/opencode/350c726aa8b6b11eb9242040bc5eb7ae837fbf8a";
   };
 
   outputs = inputs@{ self, flake-parts, ... }:
