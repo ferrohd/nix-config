@@ -19,7 +19,12 @@
 │   │   └── fonts.nix                  # JetBrainsMono NF, Inter, Noto
 │   ├── blackmesa/                     # AMD/Nvidia workstation, dual 4K, gaming
 │   ├── laptop/                        # Portable — auto-cpufreq, lid switch
-│   └── server/                        # Headless — nginx, fail2ban, auto-update
+│   ├── server/                        # Headless — nginx, fail2ban, auto-update
+│   └── dns/                           # Shared profile for every DNS node
+│       ├── nodes.nix                  # Fleet registry: anycast IP, BGP, per-node facts
+│       ├── default.nix                # Profile: networking, staggered GitOps upgrades
+│       ├── adguard.nix                # DNS policy: upstreams, filters, rewrites
+│       └── <node>/hardware-configuration.nix
 │
 ├── modules/
 │   ├── nixos/                         # System-level toggle modules
@@ -27,6 +32,7 @@
 │   │   ├── audio.nix                  # PipeWire support packages
 │   │   ├── bluetooth.nix              # BlueZ + Blueman
 │   │   ├── docker.nix                 # Docker + Podman + lazydocker
+│   │   ├── anycast-dns.nix            # AdGuard Home + BIRD anycast + health loop
 │   │   └── gaming.nix                 # Steam + gamescope + gamemode
 │   └── home/                          # Home-Manager dotfiles
 │       ├── shell/                     # Zsh + oh-my-zsh + Starship (Catppuccin)
@@ -81,6 +87,15 @@ just deploy server user@10.0.0.5   # Remote deploy via SSH
 1. Create `hosts/<name>/default.nix` + `hardware-configuration.nix`
 2. Add to `flake.nix` → `nixosConfigurations`
 3. `just switch <name>`
+
+## Adding a DNS node
+
+All DNS nodes share one configuration; they differ only in `hosts/dns/nodes.nix`.
+
+1. Add an entry to `nodes` in `hosts/dns/nodes.nix`
+2. Add `hosts/dns/<name>/hardware-configuration.nix`
+3. First install: `just deploy <name> ferro@<address>` — `system.autoUpgrade` keeps it in sync with `main` afterwards
+4. `just mikrotik-dns` to add the BGP session on the router
 
 ## Adding a new user
 
