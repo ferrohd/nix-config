@@ -79,10 +79,7 @@
 
         # RouterOS side of the anycast DNS fleet, rendered from hosts/dns/nodes.nix
         packages.mikrotik-dns = pkgs.writeText "dns-anycast.rsc"
-          (import ./lib/mikrotik-dns.nix {
-            inherit (pkgs) lib;
-            dns = import ./hosts/dns/nodes.nix;
-          });
+          (import ./lib/mikrotik-dns.nix { dns = import ./hosts/dns/nodes.nix; });
 
         checks = {
           lint = pkgs.runCommand "lint" { buildInputs = [ pkgs.statix pkgs.deadnix ]; } ''
