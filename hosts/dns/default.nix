@@ -19,10 +19,7 @@ in
 
   myconfig.anycastDns = {
     enable = true;
-    lan = {
-      inherit (node) interface address;
-      inherit (site.lan) prefixLength gateway;
-    };
+    lan.interface = node.interface;
     inherit (site) anycastAddress bgp;
   };
 

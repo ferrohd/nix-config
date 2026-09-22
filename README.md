@@ -91,11 +91,18 @@ just deploy server user@10.0.0.5   # Remote deploy via SSH
 ## Adding a DNS node
 
 All DNS nodes share one configuration; they differ only in `hosts/dns/nodes.nix`.
+Nodes take their LAN address from DHCP and the router accepts dynamic BGP peers
+from the whole subnet, so **the router side never changes** — `just mikrotik-dns`
+is one-time setup, not a per-node step.
 
-1. Add an entry to `nodes` in `hosts/dns/nodes.nix`
+1. Add an entry to `nodes` in `hosts/dns/nodes.nix` (`system`, `interface`, `stateVersion`)
 2. Add `hosts/dns/<name>/hardware-configuration.nix`
-3. First install: `just deploy <name> ferro@<address>` — `system.autoUpgrade` keeps it in sync with `main` afterwards
-4. `just mikrotik-dns` to add the BGP session on the router
+3. First install: find the node's lease on the router (`/ip dhcp-server lease print`),
+   then `just deploy <name> ferro@<lease>` — `system.autoUpgrade` keeps it in sync
+   with `main` afterwards
+
+Clients query the fleet on the anycast address (`site.anycastAddress`), never a
+node's own address. To debug a specific node: `ssh` in and `dig @10.53.53.53`.
 
 ## Adding a new user
 

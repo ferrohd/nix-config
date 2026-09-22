@@ -15,12 +15,10 @@ in
   options.myconfig.anycastDns = {
     enable = lib.mkEnableOption "anycast DNS node (AdGuard Home + BGP)";
 
-    lan = {
-      interface = mkOption { type = types.str; example = "enp1s0"; };
-      address = mkOption { type = types.str; };
-      prefixLength = mkOption { type = types.ints.between 1 32; default = 24; };
-      gateway = mkOption { type = types.str; };
-    };
+    # The node's LAN address comes from DHCP: nothing here or on the router
+    # is keyed on it, so nodes are interchangeable and the router peers with
+    # the subnet instead of with each machine.
+    lan.interface = mkOption { type = types.str; example = "enp1s0"; };
 
     anycastAddress = mkOption { type = types.str; };
 
@@ -32,16 +30,21 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # ── Networking: static and declarative, no NetworkManager ───────────
+    # ── Networking: networkd, no NetworkManager ─────────────────────────
     networking = {
       networkmanager.enable = lib.mkForce false;
       useNetworkd = true;
-      useDHCP = false;
+      useDHCP = false; # legacy dhcpcd; networkd does DHCP per-link below
       firewall = {
         allowedTCPPorts = [ 53 179 ];
         allowedUDPPorts = [ 53 ];
       };
     };
+
+    # AdGuard binds the anycast address, which networkd may not have put on
+    # anycast0 yet (it is RequiredForOnline = "no"). Standard anycast
+    # practice, and it removes the startup race.
+    boot.kernel.sysctl."net.ipv4.ip_nonlocal_bind" = 1;
 
     systemd.network = {
       enable = true;
@@ -49,10 +52,11 @@ in
       networks = {
         "10-lan" = {
           matchConfig.Name = cfg.lan.interface;
-          address = [ "${cfg.lan.address}/${toString cfg.lan.prefixLength}" ];
-          gateway = [ cfg.lan.gateway ];
+          networkConfig.DHCP = "ipv4";
           # The node resolves through its own AdGuard; the public fallback
-          # keeps auto-upgrade working while AdGuard is down.
+          # keeps auto-upgrade working while AdGuard is down. Ignore whatever
+          # the lease says so the router can't point us at ourselves.
+          dhcpV4Config = { UseDNS = false; UseDomains = false; };
           dns = [ "127.0.0.1" "9.9.9.9" ];
           linkConfig.RequiredForOnline = "routable";
         };
@@ -73,8 +77,10 @@ in
       settings = {
         dns = {
           # Explicit binds, not 0.0.0.0: systemd-resolved (hosts/common)
-          # already holds 127.0.0.53:53.
-          bind_hosts = [ "127.0.0.1" cfg.lan.address cfg.anycastAddress ];
+          # already holds 127.0.0.53:53. The DHCP-assigned LAN address is
+          # deliberately not bound — clients reach the service on the
+          # anycast address; debug with `dig @${cfg.anycastAddress}`.
+          bind_hosts = [ "127.0.0.1" cfg.anycastAddress ];
           port = 53;
         };
         # Probe target for the health loop below
@@ -89,11 +95,19 @@ in
       after = [ "network-online.target" ];
     };
 
+    # `router id from` fails to start bird if the DHCP lease hasn't landed.
+    systemd.services.bird = {
+      wants = [ "network-online.target" ];
+      after = [ "network-online.target" ];
+    };
+
     # ── BGP announcement ─────────────────────────────────────────────────
     services.bird = {
       enable = true;
       config = ''
-        router id ${cfg.lan.address};
+        # Derived from the DHCP lease, so it differs per node without any
+        # per-node config. Picked once at startup: bird waits for the link.
+        router id from "${cfg.lan.interface}";
 
         protocol device { }
 
@@ -104,8 +118,11 @@ in
           route ${cfg.anycastAddress}/32 via "anycast0";
         }
 
+        # No local address: bird uses the source address of the route to the
+        # neighbor, whatever DHCP handed us. The router listens for dynamic
+        # peers from this subnet, so it needs no matching entry per node.
         protocol bgp uplink {
-          local ${cfg.lan.address} as ${toString cfg.bgp.nodeAS};
+          local as ${toString cfg.bgp.nodeAS};
           neighbor ${cfg.bgp.routerAddress} as ${toString cfg.bgp.routerAS};
           hold time 9;
           keepalive time 3;
