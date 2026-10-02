@@ -14,6 +14,7 @@
       "audio"
       "input"
       "render"
+      "dialout"
     ]
     # Sunshine needs uinput to create virtual gamepads/mouse/keyboard.
     # services.sunshine implies hardware.uinput.enable, which is what creates
