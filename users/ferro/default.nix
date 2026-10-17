@@ -86,12 +86,12 @@
   # ── Packages ────────────────────────────────────────────────────────────
   home.packages = with pkgs; [
     # ── Dev tools ─────────────────────────────────────────────────────
+    #
+    # No cargo subcommands here — same reasoning as rust-analyzer in neovim.nix: they belong in
+    # the project's dev shell, pinned alongside the toolchain that runs them.
+    # cargo-{nextest,edit,flamegraph} are in templates/rust; cargo-watch is superseded by bacon,
+    # cargo-audit by `cargo deny check advisories`.
     just
-    cargo-watch
-    cargo-edit
-    cargo-nextest
-    cargo-audit
-    cargo-flamegraph
     tokei
     hyperfine
 

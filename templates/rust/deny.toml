@@ -1,0 +1,49 @@
+# Supply-chain policy, checked by `cargo deny check`.
+#
+# No `[graph] targets` on purpose: with none set, cargo-deny walks every target, which is what
+# surfaces the Windows- and macOS-only crates a dependency pulls in.
+
+[advisories]
+# A yanked dependency cannot be reproduced, so it fails rather than warns.
+yanked = "deny"
+unmaintained = "all"
+ignore = []
+
+[licenses]
+# Enumerated rather than guessed. Two things to know when extending it:
+#
+#   Omitting one side of an `OR` is how you record which side you take — "MIT OR GPL-3.0-only"
+#   stays green on the MIT entry alone.
+#   File-level weak copyleft (MPL-2.0, EPL-2.0) may ship inside an (A)GPL work; MPL-2.0 §3.3
+#   permits exactly that. Not the same decision as admitting GPL, so name the crate that forced it.
+allow = [
+  "AGPL-3.0-or-later",              # this workspace
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "MIT",
+  "Unicode-3.0",
+  "Unlicense",
+  "Zlib",
+]
+confidence-threshold = 0.93
+
+[bans]
+# Two versions of a crate means two sets of its types, which do not interconvert — a bug class
+# that only appears when a value crosses between them. This will fail the first time a dependency
+# drags in an older major: bump the parent, or record it below with a reason.
+multiple-versions = "deny"
+skip = []
+
+# A version-less dependency is a wildcard to cargo-deny, normally an accident worth catching.
+# The exception is a cyclic dev-dependency, which *must* be declared by path alone or neither
+# crate can be published first. Exempt those rather than switching the check off.
+wildcards = "deny"
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
