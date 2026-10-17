@@ -9,13 +9,13 @@
       general = {
         after_sleep_cmd = "hyprctl dispatch dpms on";
         ignore_dbus_inhibit = false;
-        lock_cmd = "hyprlock";
+        lock_cmd = "pidof hyprlock || hyprlock";
       };
 
       listener = [
         {
           timeout = 300;
-          on-timeout = "hyprlock";
+          on-timeout = "pidof hyprlock || hyprlock";
         }
         {
           timeout = 600;
