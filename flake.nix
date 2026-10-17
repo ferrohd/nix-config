@@ -126,14 +126,15 @@
 
         # ── Project templates ───────────────────────────────────────────
         # Scaffold with: nix flake init -t ~/.config/nixos#rust
+        #
+        # A cargo workspace: toolchain pinned by rust-toolchain.toml, three dev shells
+        # (default / ci / msrv), the check suite behind `just`, and the release pipeline wired
+        # up. `just all` is green on a fresh scaffold; start with the justfile, which lists the
+        # few setup steps only you can do. For nightly, flip `channel` in rust-toolchain.toml.
         templates = {
           rust = {
             path = ./templates/rust;
-            description = "Rust project — pinned stable toolchain via rust-overlay + direnv";
-          };
-          rust-nightly = {
-            path = ./templates/rust-nightly;
-            description = "Rust project — pinned nightly toolchain (+miri) via rust-overlay + direnv";
+            description = "Rust workspace — pinned toolchain, full check suite, release pipeline";
           };
           default = self.templates.rust;
         };

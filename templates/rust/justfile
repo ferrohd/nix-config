@@ -1,0 +1,241 @@
+# Every check CI runs, and a few commands that only help a human.
+#
+#   just              list the recipes
+#   just all          the whole check suite, as CI runs it
+#
+# CI runs these same recipes, one per job, so the two cannot drift:
+#
+#   nix develop .#ci   --command just <recipe>
+#   nix develop .#msrv --command just msrv
+#
+# Everything passes --locked, or cargo may resolve a different version than the lockfile — which
+# makes `msrv` meaningless, since a dependency raising its own minimum would fail for an
+# unrelated reason. Recipes carry [doc] because `just --list` shows only a comment's last line.
+#
+# ---------------------------------------------------------------- setting this up
+#
+#   1. Rename the skeleton crates. `app` and `app-cli` appear in five places that move together:
+#
+#        Cargo.toml            [workspace.dependencies] entries
+#        crates/*              the directories, and `name` in each manifest
+#        release-plz.toml      [[package]] name — the crate dist fills in
+#        dist-workspace.toml   tag-namespace — keep the trailing hyphen
+#        justfile              `-p app` in `features`, `root=app` in `publish`
+#
+#      Then `just dist-sync`, and `ls .github/workflows` to delete the release workflow generated
+#      under the old name — regenerating leaves it, with its own tag trigger.
+#
+#   2. Set `repository` in [workspace.package], and the owner in release-plz.yml.
+#   3. Install the Renovate app. See renovate.json5.
+#   4. Add two secrets: RELEASE_PLZ_TOKEN (a PAT — the default GITHUB_TOKEN cannot trigger
+#      workflows, so tag-triggered releases would never build) and CARGO_REGISTRY_TOKEN.
+#   5. Lower `rust-version` in Cargo.toml if you want `just msrv` to mean anything; it starts
+#      equal to current stable.
+
+default:
+    @just --list --unsorted
+
+# ---------------------------------------------------------------- checks
+
+[doc('rustfmt, check only')]
+fmt:
+    cargo fmt --all --check
+
+# [workspace.lints] already denies clippy::all, missing_docs and unsafe_code; `-D warnings`
+# escalates the `pedantic = warn` tier. After `--` so it applies here and not to dependencies.
+[doc('clippy, with all features and with none')]
+clippy:
+    cargo clippy --workspace --all-targets --all-features --locked -- -D warnings
+    cargo clippy --workspace --all-targets --no-default-features --locked -- -D warnings
+
+# --cfg docsrs matches docs.rs, which the member manifests opt into.
+[doc('rustdoc, warnings denied, as docs.rs builds it')]
+doc:
+    RUSTDOCFLAGS="-D warnings --cfg docsrs" cargo doc --workspace --all-features --no-deps --locked
+
+# nextest for the per-test timeout in .config/nextest.toml: `cargo test` runs a binary's tests in
+# one process and cannot notice one that hangs, so a blocked test stalls the job until the
+# workflow timeout kills it. nextest skips doctests, hence the second line.
+[doc('tests and doctests; FEATURES passes through to cargo')]
+test *FEATURES:
+    cargo nextest run --workspace --locked --profile ci {{ FEATURES }}
+    cargo test --doc --workspace --locked {{ FEATURES }}
+
+# Self-maintaining: a new feature extends the sweep without editing this file. The powerset is
+# exponential, so it targets one crate — the public facade — while --each-feature sweeps the
+# workspace linearly.
+[doc('every feature alone, then one crate powerset')]
+features:
+    cargo hack clippy --each-feature --workspace --all-targets --locked -- -D warnings
+    cargo hack clippy --feature-powerset -p app --all-targets --locked -- -D warnings
+
+# `check` not `build`: linking a foreign target needs its SDK, and checking already catches what
+# this is for — a dependency gating an API behind #[cfg] and a call site that ignores it, an
+# E0599 that testing on Linux never reveals. The list is `crossTargets` in flake.nix.
+[doc('cross-checks for the shipped platforms')]
+targets:
+    cargo check --workspace --all-features --all-targets --locked --target aarch64-apple-darwin
+    cargo check --workspace --all-features --all-targets --locked --target aarch64-unknown-linux-gnu
+
+# Run in devShells.msrv: nix develop .#msrv --command just msrv
+[doc('cargo check on the oldest supported compiler')]
+msrv:
+    rustc --version
+    cargo check --workspace --all-features --all-targets --locked
+
+# Property tests need far more than the default 256 cases to be worth running, and at that size
+# they fight nextest's timeout — hence plain `cargo test` and a separate job.
+#
+# [doc('the extended property test runs')]
+# proptest:
+#     PROPTEST_CASES=8192 cargo test -p app --all-features --locked
+
+[doc('what cargo publish would do, before release-plz does it')]
+publish:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # Catches publishing traps on the pull request that introduces them, rather than halfway
+    # through a release when some crates are already on the registry and cannot be taken back.
+    #
+    # `cargo package` refuses to describe a package with uncommitted changes — rightly, since the
+    # answer would not be reproducible. Only bites a developer running `all` mid-change.
+    if [[ -z ${GITHUB_ACTIONS-} && -n $(git status --porcelain) ]]; then
+        echo "skipping the packaging checks: the working tree is dirty."
+        echo "commit or stash, or run this on a clean checkout as CI does."
+    else
+        # Only the bottom of the graph can be packaged for real before the first release:
+        # `cargo package` resolves against the registry, so everything above it fails with "no
+        # matching package" until the one below is published. `--list` does the manifest rewrite
+        # without resolving. Set `root` to the crate depending on nothing else in the workspace.
+        root=app
+        cargo package -p "$root" --locked
+        for crate in $(cargo metadata --no-deps --format-version 1 --locked |
+            yq -p json -r '.packages[].name' | sort); do
+            [[ $crate == "$root" ]] && continue
+            cargo package -p "$crate" --list --locked
+        done
+    fi
+
+    # A cyclic dev-dependency (A depends on B, B dev-depends on A) must be declared by path with
+    # no version, or neither can be published first — cargo drops a version-less one from the
+    # packaged manifest. deny.toml's allow-wildcard-paths exists for it. Assert it cannot regress:
+    #
+    # for manifest in crates/*/Cargo.toml; do
+    #     if grep -Eq '^app-sim *= *\{[^}]*version' "$manifest"; then
+    #         echo "::error::$manifest declares app-sim with a version; publishing will deadlock"
+    #         exit 1
+    #     fi
+    # done
+
+# Policy and every exception live in deny.toml.
+[doc('advisories, licences, duplicate versions, sources')]
+deny:
+    cargo deny check advisories bans licenses sources
+
+# An unused dependency is still resolved, locked, audited and counted against the
+# duplicate-version policy. cargo-machete scans source, so macro-only uses are false positives:
+# record them as [package.metadata.cargo-machete] ignored = [...] rather than dropping the check.
+[doc('dependencies that nothing actually uses')]
+unused:
+    cargo machete
+
+# Commented because cargo-semver-checks needs a published baseline, which a project that has
+# never released does not have. Uncomment this and its ci.yml entry after the first release, and
+# breakage is caught on the pull request rather than in the release PR, once it is already on
+# master. `--baseline-rev <tag>` compares against git instead. release-plz runs this itself at
+# release time regardless — it is how it decides to bump a major.
+#
+# [doc('API breaking changes against the last published version')]
+# semver:
+#     cargo semver-checks --workspace --all-features
+
+[doc('TOML formatting')]
+toml:
+    taplo fmt --check --diff
+
+# typos honours .gitignore, so it needs no exclude list.
+[doc('spelling, in prose and in comments')]
+typos:
+    typos
+
+# The workflow is generated from dist-workspace.toml; if they drift, releases run the stale one.
+# A failure after a flake.lock bump means the version pin is stale: `just dist-sync`.
+[doc('the generated release workflow is current, and the plan resolves')]
+dist:
+    dist generate --check
+    dist plan
+
+# Only the workflows we author. actionlint's shellcheck has opinions about the shell dist emits
+# that we cannot act on, since editing that file would fail `dist generate --check`.
+[doc('actionlint')]
+workflows:
+    actionlint .github/workflows/ci.yml .github/workflows/release-plz.yml .github/workflows/audit.yml
+
+[doc('the whole suite, minus msrv, which needs its own shell')]
+all: fmt clippy doc features targets publish deny unused toml typos dist workflows
+    @just test --all-features
+    @just test
+    @just test --no-default-features
+
+# ---------------------------------------------------------------- development
+
+[doc('accept the inline snapshot changes')]
+snap:
+    cargo insta test --accept --workspace --all-features
+
+# bacon.toml redefines bacon's jobs to match `clippy`, `test` and `doc` above, rather than its
+# default bare `cargo check`.
+[doc('rebuild and retest on every save')]
+watch:
+    bacon
+
+[doc('apply what clippy, rustfmt and taplo can fix themselves')]
+fix:
+    cargo clippy --workspace --all-targets --all-features --fix --allow-dirty --allow-staged
+    cargo fmt --all
+    taplo fmt
+
+[doc('build the docs and open them')]
+docs:
+    cargo doc --workspace --all-features --no-deps --open
+
+[doc('dependencies with newer versions available')]
+outdated:
+    cargo outdated --workspace --root-deps-only
+
+[doc('update the lockfile and the flake inputs')]
+update:
+    cargo update
+    nix flake update
+
+# Deliberately not `dist init`, which dist's docs recommend: it rewrites dist-workspace.toml by
+# re-serialising its config, replacing every comment with its own defaults (verified — it deleted
+# 85 lines). `dist generate` touches only the workflow. Run `dist init` on its own when you want
+# to hear about new features, then `git add -p`.
+[doc('resync the dist pin and generated workflow to the flake version')]
+dist-sync:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    version="$(dist --version | cut -d' ' -f2)"
+    sed -i -E "s|^cargo-dist-version = .*|cargo-dist-version = \"${version}\"|" dist-workspace.toml
+    echo "cargo-dist-version pinned to ${version}"
+    dist generate
+
+# Not from the flake, and not in `all`: renovate.json5 is read by the Mend-hosted app, which runs
+# a version ahead of nixpkgs, so validating against a pinned older copy misleads. Nothing carries
+# its 269 MiB closure otherwise.
+#
+# No filename argument — naming the file validates it as renovate's *global* config schema, which
+# is a different and more permissive thing. With no arguments it discovers and validates the file
+# as a repository config.
+[doc('validate renovate.json5 against the renovate schema')]
+renovate:
+    nix shell nixpkgs#renovate -c renovate-config-validator
+
+# No `release-preview`: only `release` takes --dry-run, and with release_always = false it answers
+# "not from a release PR" rather than naming the next version. The real preview is the release
+# pull request release-plz opens on every push to master.
+[doc('what would be published, as a dry run (needs GITHUB_TOKEN)')]
+release-check:
+    release-plz release --dry-run --forge github \
+        --git-token "${GITHUB_TOKEN:?set it, e.g. export GITHUB_TOKEN=$(gh auth token)}"

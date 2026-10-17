@@ -1,0 +1,43 @@
+[workspace]
+members = ["cargo:."]
+
+# Generates .github/workflows/app-cli--release.yml, which is checked in and verified by `just
+# dist`. Edit this file and re-run `dist generate`, never the workflow.
+[dist]
+# The dist that the release workflow curl-installs for itself. Mandatory, exact version, and not
+# flake-managed: that workflow never enters a dev shell. The flake's dist (which runs `dist
+# generate --check`) must agree, or it errors with "You're running dist X, but
+# 'cargo-dist-version = Y' is set". After a flake.lock bump: `just dist-sync`.
+cargo-dist-version = "0.31.0"
+
+# Note the release workflow builds with the runner's own rustup, resolving `channel = "stable"`
+# to whatever is current then — not the flake's pin. That is dist's intent; `github-build-setup`
+# is the escape hatch. The crates.io publish in release-plz.yml does use the pinned toolchain.
+
+ci = "github"
+# Add "powershell" alongside a Windows target.
+installers = ["shell"]
+
+# All built on native runners, nothing cross-compiled. Keep in step with `crossTargets` in
+# flake.nix so everything shipped is also checked by `just targets`.
+#
+# Absent: x86_64-pc-windows-msvc (add to crossTargets too), x86_64-apple-darwin (the aarch64
+# build covers darwin unless you have target_arch conditionals), *-unknown-linux-musl (static,
+# dist installs musl-tools automatically), armv7 (the only one needing real cross-compilation).
+targets = ["x86_64-unknown-linux-gnu", "aarch64-unknown-linux-gnu", "aarch64-apple-darwin"]
+
+# release-plz creates the release as a draft with the changelog; dist uploads into it and
+# undrafts. Without this both would try to create it.
+create-release = false
+
+# Narrows the tag trigger. The trailing hyphen is load-bearing: a namespace of "app" would match
+# the tag app-cli-v0.1.0 and fire this workflow on a library tag.
+#
+# dist names the file "<tag-namespace>-release.yml", hence the doubled hyphen. Renaming leaves
+# the old file in place with its own trigger — check `ls .github/workflows` afterwards.
+tag-namespace = "app-cli-"
+
+# The only cross-platform coverage that links: ci.yml is Linux-only and reaches the rest with
+# `cargo check --target`, which never runs the linker. Also the only thing exercising
+# `--profile dist`.
+pr-run-mode = "upload"

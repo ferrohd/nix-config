@@ -1,0 +1,46 @@
+[workspace]
+resolver = "3"
+# A glob, as the cargo book recommends, so adding a crate needs no edit here.
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+# The one place the MSRV is declared; flake.nix reads it to build devShells.msrv, so this value
+# *is* the compiler `just msrv` runs. Keep clippy.toml's `msrv` in step. It starts equal to
+# current stable, which makes that recipe a tautology — lower it when you want a real range.
+rust-version = "1.99"
+license = "AGPL-3.0-or-later"
+repository = "https://github.com/ferrohd/app"
+# `readme` and `license-file` resolve relative to the workspace root rather than to each member,
+# so one file serves every crate. Cargo copies it into each package on publish.
+readme = "README.md"
+
+[workspace.dependencies]
+# Path *and* version: `cargo publish` keeps only the version, since a path means nothing on the
+# registry. The exception is a cyclic dev-dependency (A depends on B, B dev-depends on A), which
+# must be path-only or neither can be published first — see the `publish` recipe.
+app = { path = "crates/app", version = "0.1.0" }
+app-cli = { path = "crates/app-cli", version = "0.1.0" }
+
+# Third-party dependencies go here, referenced from members as `foo.workspace = true`.
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "deny"
+
+[workspace.lints.clippy]
+# `priority = -1` is what makes group lints settable alongside individual overrides.
+all = { level = "deny", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+# Cap a pathologically slow crate here rather than lowering the whole workspace. A real case went
+# from one second at opt-level 2 to seven minutes at 3, because LLVM inlined all of `core::fmt`
+# into a loop and tried to unroll it. Set on `release` so `dist` inherits it.
+#
+# [profile.release.package.app]
+# opt-level = 2

@@ -1,0 +1,74 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+  // Runs as the Mend-hosted GitHub App: install it on the repository and it reads this file from
+  // the default branch. No workflow and no secret. `just renovate` validates it.
+
+  extends: ["config:recommended"],
+
+  // config:recommended pulls in :semanticPrefixFixDepsChoreOthers, which commits dependency
+  // updates as `fix(deps):`. release-plz.toml tries `^fix` before `^(chore|build)\(deps\)`, so
+  // every bump would land under "Fixed" — and ci.yml's title check accepts `fix`, so nothing
+  // would fail. Dropped, and the prefix set explicitly below.
+  ignorePresets: [":semanticPrefixFixDepsChoreOthers"],
+
+  // `auto` autodetects from history — not something to leave to chance when release-plz's
+  // parsers key on the exact prefix.
+  semanticCommits: "enabled",
+  semanticCommitType: "chore",
+  semanticCommitScope: "deps",
+
+  labels: ["dependencies"],
+  timezone: "Europe/Rome",
+
+  // Monday 00:00–04:59. Cron rather than the natural-language form, which the docs now steer
+  // away from. The leading `*` is required: renovate has no minute granularity.
+  schedule: ["* 0-4 * * 1"],
+  prConcurrentLimit: 5,
+
+  // Disabled by default. Enabled because flake.lock pins the toolchain and every check tool.
+  nix: { enabled: true },
+
+  // lockFileMaintenance (a scheduled `cargo update`) is left off: `just update` does it on
+  // demand, and with multiple-versions = "deny" a blind refresh reliably raises a red PR about a
+  // transitive duplicate nobody asked for.
+
+  // Ordered least to most important — later rules win.
+  packageRules: [
+    {
+      description: "One pull request for all cargo updates, manifest and lockfile together",
+      matchManagers: ["cargo"],
+      groupName: "cargo dependencies",
+      groupSlug: "cargo",
+      // The cargo default is `update-lockfile`, which leaves [workspace.dependencies] untouched
+      // and turns the declared minimum into a claim nothing tests. `bump` moves both.
+      rangeStrategy: "bump",
+      // Majors ride along: deny.toml sets multiple-versions = "deny", so a half-applied update
+      // is what leaves two versions in the graph.
+      separateMajorMinor: false,
+    },
+
+    {
+      description: "One pull request for all flake inputs",
+      matchManagers: ["nix"],
+      groupName: "flake inputs",
+      groupSlug: "flake",
+      prBodyNotes: [
+        "A `nixpkgs` bump moves `cargo-dist`, so the `dist` job will fail against the `cargo-dist-version` pin in `dist-workspace.toml`. Expected — run `just dist-sync` and push onto this branch.",
+      ],
+    },
+
+    {
+      description: "Never touch the dist-generated release workflow",
+      matchManagers: ["github-actions"],
+      // The rule this file exists for. dist pins its own action versions; bumping them fails
+      // `dist generate --check`, regenerating reverts the bump, and the two never converge.
+      // Dependabot could not scope to one file, so it had to leave every workflow unmanaged.
+      //
+      // Matched as a pattern, not today's name: dist writes "<tag-namespace>-release.yml" and the
+      // namespace must end in a hyphen, so a rename cannot silently re-expose the file.
+      matchFileNames: [".github/workflows/*--release.yml"],
+      enabled: false,
+    },
+  ],
+}

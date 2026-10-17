@@ -1,0 +1,41 @@
+[workspace]
+# Publish when the release PR merges, not on every commit to master.
+release_always = false
+
+# Pinned: the default switches to "v{{ version }}" when only one package is publishable, so this
+# keeps tags stable the day you add a second. dist's trigger is narrowed to the binary crate's
+# tag via `tag-namespace`, so library tags do not start the binary build.
+git_tag_name = "{{ package }}-v{{ version }}"
+
+# `cargo publish` verifies with default features only, leaving every optional feature unverified
+# at the moment it ships — and those are the ones nothing else exercises.
+publish_all_features = true
+
+pr_labels = ["release"]
+
+# The only crate shipping a binary, so the one dist fills in. Creating it as a draft is the
+# handoff: dist uploads into it and undrafts once everything is present. Pairs with
+# `create-release = false` on dist's side.
+[[package]]
+name = "app-cli"
+git_release_draft = true
+
+[changelog]
+protect_breaking_commits = true
+
+# First match wins. This list and ci.yml's `types:` must stay in step — a type accepted there but
+# unhandled here does not fail anything, it just lands silently under "Other".
+commit_parsers = [
+  { message = '^feat', group = "Added" },
+  { message = '^fix', group = "Fixed" },
+  { message = '^perf', group = "Performance" },
+  { message = '^refactor', group = "Changed" },
+  # A revert undoes shipped behaviour, so it belongs with the other changes.
+  { message = '^revert', group = "Changed" },
+  { message = '^docs', group = "Documentation" },
+  # Worth listing even though these prefixes are skipped below. renovate.json5 forces
+  # `chore(deps)` — overriding a preset that would use `fix(deps)` — so they land here.
+  { message = '^(chore|build)\(deps\)', group = "Dependencies" },
+  { message = '^(ci|style|test|chore|build)', skip = true },
+  { message = '^.*', group = "Other" },
+]
