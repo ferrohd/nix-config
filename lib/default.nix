@@ -2,13 +2,14 @@
 
 let
   inherit (inputs.nixpkgs) lib;
-in
-{
+
   # ── mkHost ──────────────────────────────────────────────────────────────
   # Build a full NixOS + Home-Manager configuration for a host.
   #
   # Args:
-  #   hostname     : string     — maps to hosts/<hostname>/
+  #   hostname     : string     — the machine's name
+  #   profile      : string     — maps to hosts/<profile>/ (defaults to hostname;
+  #                               lets several machines share one host profile)
   #   system       : string     — e.g. "x86_64-linux"
   #   users        : [ string ] — list of usernames (from users/<name>/)
   #   desktop      : bool       — enables GUI modules when true
@@ -17,6 +18,7 @@ in
   #
   mkHost =
     { hostname
+    , profile ? hostname
     , system ? "x86_64-linux"
     , users ? [ ]
     , desktop ? true
@@ -39,7 +41,7 @@ in
       inherit system specialArgs;
       modules = [
         # ── Host-specific config ──────────────────────────────────────
-        ../hosts/${hostname}
+        ../hosts/${profile}
 
         # ── Shared system modules (locale, networking, security…) ─────
         ../hosts/common
@@ -93,4 +95,26 @@ in
       # ── Extra per-host modules (hardware, etc.) ───────────────────────
       ++ extraModules;
     };
+in
+{
+  inherit mkHost;
+
+  # ── mkDnsHosts ──────────────────────────────────────────────────────────
+  # One nixosConfiguration per entry in hosts/dns/nodes.nix, all built from
+  # the shared hosts/dns profile. Only the hardware config is per machine.
+  #
+  # Args:
+  #   users : [ string ] — accounts to create on every DNS node
+  #
+  mkDnsHosts = { users ? [ ] }:
+    lib.mapAttrs
+      (name: node: mkHost {
+        hostname = name;
+        profile = "dns";
+        inherit (node) system;
+        inherit users;
+        desktop = false;
+        extraModules = [ ../hosts/dns/${name}/hardware-configuration.nix ];
+      })
+      (import ../hosts/dns/nodes.nix).nodes;
 }
