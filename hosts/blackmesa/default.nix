@@ -46,6 +46,24 @@
     usbutils
     mesa-demos
     vulkan-tools
+    # Hardware/firmware info
+    lshw
+    inxi
+    hwinfo
+    dmidecode
+    # Disk health
+    smartmontools
+    nvme-cli
+    # Network monitoring/diagnostics
+    nethogs
+    iftop
+    bandwhich
+    iperf3
+    # System diagnostics
+    powertop
+    iotop
+    ncdu
+    tree
   ];
 
   system.stateVersion = "25.11";
