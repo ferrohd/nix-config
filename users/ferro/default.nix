@@ -94,6 +94,8 @@
     just
     tokei
     hyperfine
+    python3
+    uv
 
     # ── Kubernetes / DevOps ───────────────────────────────────────────
     kubectl
