@@ -32,8 +32,11 @@
   myconfig.sunshine.enable = true;
 
   # ── Firewall ────────────────────────────────────────────────────────────
-  # Eden emulator's built-in multiplayer room (LDN) listens here when hosting.
-  networking.firewall.allowedUDPPorts = [ 24872 ];
+  # Steam ports come from programs.steam.*.openFirewall in modules/nixos/gaming.nix.
+  networking.firewall.allowedUDPPorts = [
+    24872 # Eden emulator LDN room (when hosting)
+    7777 # Absolum online co-op — direct/LAN peers
+  ];
 
   # ── Thunderbolt ─────────────────────────────────────────────────────────
   services.hardware.bolt.enable = true;
