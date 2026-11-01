@@ -31,6 +31,11 @@
   # from it. Encoder selection is left to Sunshine's autodetection.
   myconfig.sunshine.enable = true;
 
+  # ── Reverse engineering ─────────────────────────────────────────────────
+  # Full kit; see modules/nixos/reverse-engineering.nix for the sub-group
+  # toggles if the closure needs trimming.
+  myconfig.reverseEngineering.enable = true;
+
   # ── Firewall ────────────────────────────────────────────────────────────
   # Steam ports come from programs.steam.*.openFirewall in modules/nixos/gaming.nix.
   networking.firewall.allowedUDPPorts = [

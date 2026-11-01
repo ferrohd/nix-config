@@ -47,6 +47,12 @@ in
         # ── Containers ────────────────────────────────────────────────
         ../modules/nixos/docker.nix
 
+        # ── Reverse engineering ───────────────────────────────────────
+        # Imported everywhere, but stays off until a host opts in with
+        # myconfig.reverseEngineering.enable. Not in the desktop branch
+        # so a headless host can still enable the CLI sub-groups.
+        ../modules/nixos/reverse-engineering.nix
+
         # ── Secrets ───────────────────────────────────────────────────
         inputs.sops-nix.nixosModules.sops
 

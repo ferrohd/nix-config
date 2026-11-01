@@ -32,6 +32,9 @@
     enable32Bit = true;
   };
 
+  # ── Reverse engineering ─────────────────────────────────────────────────
+  myconfig.reverseEngineering.enable = true;
+
   environment.systemPackages = with pkgs; [
     acpi
     powertop
