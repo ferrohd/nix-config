@@ -8,14 +8,16 @@
     shell = pkgs.zsh;
     extraGroups = [
       "wheel"
-      "networkmanager"
-      "docker"
       "video"
       "audio"
       "input"
       "render"
       "dialout"
     ]
+    # Service groups only exist where the service is enabled (DNS nodes run
+    # neither NetworkManager nor Docker).
+    ++ lib.optional config.networking.networkmanager.enable "networkmanager"
+    ++ lib.optional config.virtualisation.docker.enable "docker"
     # Sunshine needs uinput to create virtual gamepads/mouse/keyboard.
     # services.sunshine implies hardware.uinput.enable, which is what creates
     # the group — on hosts without it (server) the group does not exist.

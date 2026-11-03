@@ -19,7 +19,12 @@
 │   │   └── fonts.nix                  # JetBrainsMono NF, Inter, Noto
 │   ├── blackmesa/                     # AMD/Nvidia workstation, dual 4K, gaming
 │   ├── laptop/                        # Portable — auto-cpufreq, lid switch
-│   └── server/                        # Headless — nginx, fail2ban, auto-update
+│   ├── server/                        # Headless — nginx, fail2ban, auto-update
+│   └── dns/                           # Shared profile for every DNS node
+│       ├── nodes.nix                  # Fleet registry: anycast IP, BGP, per-node facts
+│       ├── default.nix                # Profile: networking, staggered GitOps upgrades
+│       ├── adguard.nix                # DNS policy: upstreams, filters, rewrites
+│       └── <node>/hardware-configuration.nix
 │
 ├── modules/
 │   ├── nixos/                         # System-level toggle modules
@@ -27,6 +32,7 @@
 │   │   ├── audio.nix                  # PipeWire support packages
 │   │   ├── bluetooth.nix              # BlueZ + Blueman
 │   │   ├── docker.nix                 # Docker + Podman + lazydocker
+│   │   ├── anycast-dns.nix            # AdGuard Home + BIRD anycast + health loop
 │   │   └── gaming.nix                 # Steam + gamescope + gamemode
 │   └── home/                          # Home-Manager dotfiles
 │       ├── shell/                     # Zsh + oh-my-zsh + Starship (Catppuccin)
@@ -81,6 +87,22 @@ just deploy server user@10.0.0.5   # Remote deploy via SSH
 1. Create `hosts/<name>/default.nix` + `hardware-configuration.nix`
 2. Add to `flake.nix` → `nixosConfigurations`
 3. `just switch <name>`
+
+## Adding a DNS node
+
+All DNS nodes share one configuration; they differ only in `hosts/dns/nodes.nix`.
+Nodes take their LAN address from DHCP and the router accepts dynamic BGP peers
+from the whole subnet, so **the router side never changes** — `just mikrotik-dns`
+is one-time setup, not a per-node step.
+
+1. Add an entry to `nodes` in `hosts/dns/nodes.nix` (`system`, `interface`, `stateVersion`)
+2. Add `hosts/dns/<name>/hardware-configuration.nix`
+3. First install: find the node's lease on the router (`/ip dhcp-server lease print`),
+   then `just deploy <name> ferro@<lease>` — `system.autoUpgrade` keeps it in sync
+   with `main` afterwards
+
+Clients query the fleet on the anycast address (`site.anycastAddress`), never a
+node's own address. To debug a specific node: `ssh` in and `dig @10.53.53.53`.
 
 ## Adding a new user
 

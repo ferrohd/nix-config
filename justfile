@@ -102,6 +102,14 @@ secrets host:
 deploy host target:
     nixos-rebuild switch --flake .#{{host}} --target-host {{target}} --use-remote-sudo
 
+# Render the MikroTik side of the DNS fleet and import it on the router.
+# One-time setup: the router peers with the node subnet, not with each node,
+# so adding a DNS node does NOT require re-running this.
+mikrotik-dns router="admin@192.168.88.1":
+    nix build .#mikrotik-dns --out-link result-mikrotik-dns
+    scp result-mikrotik-dns {{router}}:dns-anycast.rsc
+    ssh {{router}} '/import file-name=dns-anycast.rsc'
+
 # ── Dev ───────────────────────────────────────────────────────────────────
 
 # Enter the dev shell
