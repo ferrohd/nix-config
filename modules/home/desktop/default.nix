@@ -121,25 +121,50 @@
         { _args = [ "STEAM_FORCE_DESKTOPUI_SCALING" "1.5" ]; } # scale Steam UI to match Hyprland fractional scale
       ];
 
-      # ── Autostart (single hl.on hook wrapping all execs) ────────────────
-      on = {
-        _args = [
-          "hyprland.start"
-          (lib.generators.mkLuaInline ''
-            function()
-              hl.exec_cmd("waybar")
-              hl.exec_cmd("dunst")
-              hl.exec_cmd("hypridle")
-              hl.exec_cmd("hyprpolkitagent")
-              hl.exec_cmd("nm-applet --indicator")
-              hl.exec_cmd("blueman-applet")
-              hl.exec_cmd("cliphist wipe")
-              hl.exec_cmd("wl-paste --type text --watch cliphist store")
-              hl.exec_cmd("wl-paste --type image --watch cliphist store")
-            end
-          '')
-        ];
-      };
+      # ── Autostart + monitor hotplug visibility (list of hl.on hooks) ────
+      on = [
+        {
+          _args = [
+            "hyprland.start"
+            (lib.generators.mkLuaInline ''
+              function()
+                hl.exec_cmd("waybar")
+                hl.exec_cmd("dunst")
+                hl.exec_cmd("hypridle")
+                hl.exec_cmd("hyprpolkitagent")
+                hl.exec_cmd("nm-applet --indicator")
+                hl.exec_cmd("blueman-applet")
+                hl.exec_cmd("cliphist wipe")
+                hl.exec_cmd("wl-paste --type text --watch cliphist store")
+                hl.exec_cmd("wl-paste --type image --watch cliphist store")
+              end
+            '')
+          ];
+        }
+        {
+          # Surfaces monitor add/remove events (e.g. a Thunderbolt dock
+          # link dropping) as a desktop notification instead of a silent
+          # black/missing display.
+          _args = [
+            "monitor.added"
+            (lib.generators.mkLuaInline ''
+              function(mon)
+                hl.exec_cmd('notify-send "Hyprland" "Monitor connected: ' .. tostring(mon and mon.name or mon) .. '"')
+              end
+            '')
+          ];
+        }
+        {
+          _args = [
+            "monitor.removed"
+            (lib.generators.mkLuaInline ''
+              function(mon)
+                hl.exec_cmd('notify-send "Hyprland" "Monitor disconnected: ' .. tostring(mon and mon.name or mon) .. '"')
+              end
+            '')
+          ];
+        }
+      ];
 
       # ── Window rules (combined per matcher) ─────────────────────────────
       window_rule = [
@@ -249,6 +274,14 @@
         }
         {
           monitor = "DP-2";
+          path = "${./wallpaper.png}";
+          fit_mode = "cover";
+        }
+        {
+          # Catch-all: any output not matched above (e.g. a renamed/unknown
+          # connector after a dock replug) still gets a wallpaper instead of
+          # a blank/black surface.
+          monitor = "";
           path = "${./wallpaper.png}";
           fit_mode = "cover";
         }

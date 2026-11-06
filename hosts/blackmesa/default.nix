@@ -19,6 +19,14 @@
     powerManagement.enable = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+    prime = {
+      offload = {
+        enable = true;
+        enableOffloadCmd = true; # ships `nvidia-offload <cmd>` for non-Steam programs
+      };
+      amdgpuBusId = "PCI:122@0:0:0"; # AMD Radeon Graphics (iGPU), PCI 0000:7a:00.0 — drives both monitors
+      nvidiaBusId = "PCI:1@0:0:0"; # RTX 3090 Ti (dGPU), PCI 0000:01:00.0 — compute/offload only
+    };
   };
   services.xserver.videoDrivers = [ "nvidia" ];
 

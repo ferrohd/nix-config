@@ -6,7 +6,10 @@ _:
     {
       wayland.windowManager.hyprland.settings.monitor = [
         {
-          output = "DP-2";
+          # Matched by EDID description (prefix match, up to the serial),
+          # not port name "DP-2" — survives the connector being renamed
+          # after a Thunderbolt dock replug/relink.
+          output = "desc:LG Electronics LG ULTRAFINE 408NTWG8W265";
           mode = "3840x2160@60";
           position = "0x0";
           scale = 1.5;
@@ -17,7 +20,8 @@ _:
           sdrsaturation = 1.0;
         }
         {
-          output = "DP-1";
+          # See DP-2 comment above — same rename-resilience rationale.
+          output = "desc:LG Electronics LG ULTRAFINE 407NTRLDV854";
           mode = "3840x2160@60";
           position = "1440x0";
           scale = 1.5;
